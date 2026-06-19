@@ -1,0 +1,14 @@
+.st {
+  /* allow inline word-masks to flow & wrap naturally */
+}
+.st-word {
+  display: inline-flex;
+  overflow: hidden;
+  vertical-align: top;
+  padding-bottom: 0.06em; /* room for descenders inside the mask */
+  line-height: inherit;
+}
+.st-inner {
+  display: inline-block;
+  will-change: transform;
+}

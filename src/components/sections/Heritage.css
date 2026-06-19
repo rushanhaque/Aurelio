@@ -1,0 +1,261 @@
+/* ============================================================
+   Heritage — cinematic full-bleed film.
+   Deep atelier warmth as the canvas; an editorial spine,
+   a constrained prose column, and a full-width stat band
+   sit above the video. One screen, dark ground, no portrait.
+   ============================================================ */
+
+/* ============================================================
+   SECTION SHELL — one screen, dark, video behind everything
+   ============================================================ */
+.her {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  background: #07251B;            /* dark fallback before the film loads */
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-block: var(--nav-clear) clamp(1.5rem, 3vh, 3rem);
+
+  /* dark cinematic context, scoped to this section: white text + accents */
+  --fg: #FFFFFF;
+  --fg-soft: rgba(255, 255, 255, 0.80);
+  --fg-faint: rgba(255, 255, 255, 0.56);
+  --ivory: #FFFFFF;
+  --ink: #FFFFFF;
+  --emerald: #FFFFFF;
+  --brass: #FFFFFF;
+  --brass-soft: #FFFFFF;
+  --hairline: rgba(255, 255, 255, 0.24);
+  --line: rgba(255, 255, 255, 0.18);
+  --line-light: rgba(255, 255, 255, 0.18);
+  --line-mid: rgba(255, 255, 255, 0.30);
+  --line-strong: rgba(255, 255, 255, 0.50);
+  color: #FFFFFF;
+}
+
+/* the outline CTA: white on the film, fills white with an emerald label on hover */
+.her .btn--outline:hover { background: #FFFFFF; color: #0E3B2C; border-color: #FFFFFF; }
+
+/* ============================================================
+   FILM LAYER — full-bleed background video + flat scrim
+   ============================================================ */
+.her-media {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  overflow: hidden;
+}
+
+.her-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* light soft-focus so type sits cleanly above it;
+     the slight scale pushes the softened edges past the clip */
+  filter: blur(3px);
+  transform: scale(1.04);
+}
+
+/* dark layer over the film for maximum legibility */
+.her-scrim {
+  position: absolute;
+  inset: 0;
+  background: rgba(7, 37, 27, 0.40);
+  backdrop-filter: blur(1px);
+  -webkit-backdrop-filter: blur(1px);
+}
+
+/* ============================================================
+   CONTENT — sits above the film via z-index
+   ============================================================ */
+.her-body {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  justify-content: center;
+  min-height: 0;
+}
+
+/* Spine tightening — keeps three stacked blocks inside one screen */
+.her .sh               { margin-bottom: clamp(1rem, 2vh, 2rem); }
+.her .sh-body          { margin-top: clamp(0.8rem, 1.5vh, 1.4rem); }
+.her .sh-top           { margin-bottom: clamp(0.7rem, 1.2vh, 1.2rem); }
+
+/* ---- Prose block ---- */
+.her-prose {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.7rem, 1.2vh, 1rem);
+  max-width: 54ch;                 /* left-anchored; the video breathes to the right */
+}
+
+.her-p {
+  font-size: clamp(0.95rem, 0.9rem + 0.22vw, 1.1rem);
+  line-height: 1.58;
+  font-weight: 350;
+  max-width: 46ch;
+}
+
+/* Drop cap — ivory initial with a brass underscore accent */
+.her-drop {
+  float: left;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 3em;
+  line-height: 0.78;
+  margin: 0.06em 0.14em 0 0;
+  color: var(--fg);                /* flips to ivory on .on-dark */
+}
+.her-drop::after {
+  content: '';
+  display: block;
+  width: 1.4rem;
+  height: 1px;
+  margin-top: 0.16em;
+  background: var(--brass);
+}
+
+/* ---- CTA ---- */
+.her-cta { margin-top: clamp(1rem, 1.8vh, 1.6rem); }
+
+/* ============================================================
+   STAT BAND — full width, fine vertical dividers
+   ============================================================ */
+.her-rule {
+  margin-top: clamp(1.6rem, 3vh, 2.6rem);
+  margin-bottom: 0;
+}
+
+.her-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  align-items: start;
+  padding-block: clamp(1.2rem, 2.5vh, 2.2rem);
+}
+
+.her-stat {
+  position: relative;
+  padding-inline: clamp(1.6rem, 3vw, 3.2rem);
+  text-align: left;
+}
+.her-stat:first-child { padding-inline-start: 0; }
+.her-stat:last-child  { padding-inline-end: 0; }
+
+/* Brass architectural top rule — animated span (GSAP draws scaleX 0→1) */
+.her-stat-line {
+  position: absolute;
+  top: 0;
+  left: clamp(1.6rem, 3vw, 3.2rem);
+  width: 2rem;
+  height: 1px;
+  background: var(--brass);
+  display: block;
+  transform-origin: left center;
+}
+.her-stat:first-child .her-stat-line { left: 0; }
+.her-stat:last-child  .her-stat-line { left: clamp(1.6rem, 3vw, 3.2rem); }
+
+/* Thin vertical dividers (desktop) */
+.her-stat + .her-stat::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--line-light);   /* light divider on dark ground */
+}
+
+/* Series tag */
+.her-stat-tag {
+  display: block;
+  padding-top: clamp(0.6rem, 1.1vh, 0.95rem);
+  font-size: 0.66rem;
+  letter-spacing: 0.22em;
+  color: var(--brass);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Count-up number — ivory on dark */
+.her-stat-num {
+  display: block;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(2.6rem, 1.4rem + 3vw, 4.8rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--fg);                /* var(--ivory) via .on-dark */
+  font-variant-numeric: tabular-nums lining-nums;
+  padding-top: clamp(0.3rem, 0.8vh, 0.7rem);
+}
+
+/* SR-only final value */
+.her-stat-sr {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Stat label */
+.her-stat-label {
+  display: block;
+  margin-top: clamp(0.6rem, 1.1vh, 1rem);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  color: var(--fg-faint);          /* muted ivory on dark */
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+/* Tablet — 2×2 stat grid */
+@media (max-width: 900px) {
+  .her-stats {
+    grid-template-columns: repeat(2, 1fr);
+    row-gap: clamp(2.6rem, 6vw, 3.6rem);
+    padding-block: clamp(2.4rem, 4vw, 3.6rem);
+  }
+
+  .her-stat::before { display: none; }
+  .her-stat {
+    padding-inline: clamp(1rem, 4vw, 2rem);
+    padding-block: 0;
+  }
+  .her-stat:first-child,
+  .her-stat:last-child { padding-inline: clamp(1rem, 4vw, 2rem); }
+  .her-stat::after { left: clamp(1rem, 4vw, 2rem); }
+  .her-stat:first-child::after,
+  .her-stat:last-child::after { left: clamp(1rem, 4vw, 2rem); }
+  .her-stat:nth-child(odd) { border-right: 1px solid var(--line-light); }
+}
+
+/* Mobile — single column */
+@media (max-width: 560px) {
+  .her-prose { max-width: 100%; }
+
+  .her-stats {
+    grid-template-columns: 1fr;
+    row-gap: 0;
+    padding-block: clamp(1.8rem, 5vw, 2.6rem);
+  }
+  .her-stat {
+    padding: clamp(1.6rem, 6vw, 2.4rem) 0;
+  }
+  .her-stat:nth-child(odd) { border-right: 0; }
+  .her-stat + .her-stat    { border-top: 1px solid var(--line-light); }
+  .her-stat::after         { left: 0; }
+  .her-stat-num { font-size: clamp(3.6rem, 12vw, 5rem); }
+}

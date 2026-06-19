@@ -1,0 +1,271 @@
+/* ============================================================
+   Atelier — pinned horizontal craft sequence on dark emerald.
+   Desktop: section pins, .atl-track translates left (GSAP).
+   <=900px / reduced-motion: track stacks vertically (CSS only),
+   the JS mechanic stays disabled. All colour via tokens.
+   ============================================================ */
+
+/* Atelier is a pinned horizontal experience. The whole thing lives inside
+   one pinned screen — header at top, the sliding track filling the rest —
+   so at every scroll moment it reads as exactly one screen. */
+.atl {
+  background: #FFFFFF;
+  overflow-x: hidden;            /* never leak horizontal page scroll */
+  overflow-x: clip;
+}
+
+/* compact header band, inside the pinned frame, with nav clearance */
+.atl-headwrap {
+  flex: none;
+  padding-top: var(--nav-clear);
+  padding-bottom: clamp(1.4rem, 2.6vh, 2.4rem);
+}
+.atl-headwrap .sh { margin-bottom: 0; }
+.atl-headwrap .sh-body { margin-top: clamp(1.1rem, 2.2vh, 2rem); }
+
+.atl > * { position: relative; z-index: 1; }
+
+/* ---- pinned stage: header on top, track filling the rest ----- */
+.atl-pin {
+  position: relative;
+  height: 100vh;
+  height: 100svh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* horizontal clip window for the moving track — takes the leftover height */
+.atl-viewport {
+  flex: 1;
+  min-height: 0;            /* allow the flex child to actually shrink */
+  width: 100%;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* the track GSAP slides left; pad the lead edge to the gutter */
+.atl-track {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: clamp(2rem, 4vw, 5rem);
+  padding-inline: var(--gutter);
+  width: max-content;
+  height: 100%;
+  will-change: transform;
+}
+
+/* ---- a single stage panel ------------------------------------ */
+.atl-panel {
+  flex: 0 0 auto;
+  width: min(68vw, 820px);
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+.atl-panel-inner {
+  display: grid;
+  grid-template-columns: 0.95fr 1.05fr;   /* photo (left) · text (right) */
+  align-items: center;
+  gap: clamp(2rem, 4vw, 4.4rem);
+  width: 100%;
+}
+
+.atl-panel-copy {
+  align-self: center;
+  will-change: transform, opacity;
+}
+
+/* Dominant brass numeral — near-display scale, the first thing
+   the eye reads before settling on the stage title */
+.atl-num {
+  display: block;
+  font-family: var(--serif);
+  font-weight: 400;
+  /* height-aware so a panel always clears the pinned viewport */
+  font-size: clamp(2.8rem, 1.5rem + 4vh, 5.5rem);
+  line-height: 0.88;
+  color: var(--brass-soft);
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+/* the brass rule now lives beside the numeral (BlurText renders the
+   number as a flex <p>, so an ::after would become an inline item) */
+.atl-num-block { display: block; }
+.atl-num-rule {
+  display: block;
+  width: 3.4rem;
+  height: 1px;
+  margin-top: clamp(0.8rem, 1.6vh, 1.5rem);
+  background: var(--brass);
+  opacity: 0.85;
+}
+
+/* Stage title — serif, sized to fit alongside the numeral */
+.atl-stage-title {
+  margin-top: clamp(0.9rem, 1.8vh, 1.6rem);
+  font-size: clamp(1.7rem, 1.1rem + 2vh, 3.1rem);
+  font-family: var(--serif);
+  font-weight: 400;
+  line-height: 1.04;
+  letter-spacing: -0.01em;
+  color: var(--fg);   /* contextual → ink on ivory bg */
+}
+.atl-stage-body {
+  margin-top: clamp(0.7rem, 1.4vh, 1.2rem);
+  max-width: 34ch;
+  color: var(--fg-soft);
+  font-size: var(--fs-body);
+  line-height: 1.55;
+}
+/* Caption mark: echoes the spine's index device — small tracked caps
+   with a brass series slash, tabular figures. Quiet, but house-cohesive. */
+.atl-stage-mark {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.7em;
+  margin-top: clamp(1rem, 2vh, 1.8rem);
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  font-size: 0.66rem;
+  /* Elevated from fg-faint — readable without being loud */
+  color: var(--fg-soft);
+  opacity: 0.72;
+  font-variant-numeric: tabular-nums;
+}
+.atl-stage-mark-seq { color: var(--fg-faint); }
+.atl-stage-mark-slash { color: var(--brass-soft); margin-right: 0.2em; }
+
+.atl-panel-media {
+  order: -1;                 /* photo on the left, copy on the right */
+  align-self: center;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+/* media is height-bound to the pinned viewport (not aspect-driven width) */
+.atl-panel-media .ph {
+  width: auto;
+  height: min(52vh, 24rem);
+  max-width: 100%;
+  margin-inline: auto;
+}
+
+/* ---- progress hairline (desktop only) ------------------------ */
+.atl-progress {
+  position: absolute;
+  left: var(--gutter);
+  right: var(--gutter);
+  bottom: clamp(2.2rem, 4vh, 3.4rem);
+  /* Doubled height — substantial enough to read as an architectural rail */
+  height: 2px;
+  background: var(--line-mid);   /* visible on ivory bg */
+  overflow: visible;
+}
+.atl-progress-fill {
+  display: block;
+  height: 100%;
+  width: 100%;
+  background: var(--emerald);
+  transform: scaleX(0);
+  transform-origin: left center;
+  will-change: transform;
+}
+
+/* ============================================================
+   FALLBACK — <=900px: no pin, the track becomes a vertical
+   stack. The JS mechanic is disabled at this width, so we
+   neutralise any inline transform GSAP may have left behind.
+   ============================================================ */
+@media (max-width: 900px) {
+  .atl-pin {
+    height: auto;
+    display: block;
+    overflow: visible;
+  }
+  .atl-headwrap { padding-bottom: clamp(1.5rem, 4vw, 2.5rem); }
+  .atl-viewport { display: block; overflow: visible; }
+
+  .atl-track {
+    transform: none !important;   /* defend against stale inline x */
+    flex-direction: column;
+    flex-wrap: nowrap;
+    width: 100%;
+    height: auto;
+    padding-inline: 0;
+    gap: clamp(3.6rem, 9vw, 5.8rem);
+  }
+
+  .atl-panel {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  .atl-panel-copy {
+    opacity: 1 !important;        /* JS reveal is off at this width */
+    transform: none !important;
+  }
+  .atl-num { font-size: clamp(4rem, 2.5rem + 7vw, 7rem); }
+  .atl-panel-media .ph { width: 100%; height: auto; }
+
+  .atl-progress { display: none; }
+}
+
+/* tablet-ish: keep the two-column panel but ease the media down */
+@media (max-width: 900px) and (min-width: 641px) {
+  .atl-panel-inner {
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(2.2rem, 4.5vw, 3.8rem);
+  }
+}
+
+/* phone: stack copy over media inside each panel */
+@media (max-width: 640px) {
+  .atl-panel-inner {
+    grid-template-columns: 1fr;
+    gap: clamp(1.8rem, 5.5vw, 2.6rem);
+  }
+  .atl-panel-media {
+    max-width: 78%;
+  }
+  .atl-stage-body { max-width: 42ch; }
+  /* At phone scale the numeral remains dominant but caps gracefully */
+  .atl-num {
+    font-size: clamp(4.4rem, 2.5rem + 7vw, 7rem);
+  }
+}
+
+@media (max-width: 390px) {
+  .atl-panel-media { max-width: 100%; }
+}
+
+/* Reduced motion: ensure a static, readable stack regardless of width
+   (the JS already bails; this hardens the visual + neutralises drift). */
+@media (prefers-reduced-motion: reduce) {
+  .atl-pin {
+    height: auto;
+    display: block;
+    overflow: visible;
+  }
+  .atl-viewport { display: block; overflow: visible; }
+  .atl-track {
+    transform: none !important;
+    flex-direction: column;
+    width: 100%;
+    height: auto;
+    padding-inline: 0;
+    gap: clamp(3rem, 8vw, 4.5rem);
+  }
+  .atl-panel { width: 100%; height: auto; display: block; }
+  .atl-panel-inner {
+    grid-template-columns: 1fr;
+    gap: clamp(1.8rem, 4vw, 2.6rem);
+  }
+  .atl-panel-media { height: auto; }
+  .atl-panel-media .ph { width: 100%; height: auto; max-width: 70%; }
+  .atl-panel-copy { opacity: 1 !important; transform: none !important; }
+  .atl-progress { display: none; }
+}

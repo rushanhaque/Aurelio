@@ -1,0 +1,281 @@
+/* ============================================================
+   Contact / Commission CTA — V2 styles.
+   Deep emerald ground with atmospheric radial depth (.on-dark flips tokens).
+   A towering display-scale headline, an architectural hairline-underline
+   email field, a refined 44×44 circular submit, and a generously spaced
+   studio-details rail. All color from tokens; every class prefixed cta-.
+   ============================================================ */
+
+.cta {
+  position: relative;
+  background: var(--emerald);
+  overflow: hidden;
+}
+
+/* Atmospheric depth — radial wash from upper-left, breathing into the dark */
+.cta-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(72% 64% at 18% 20%, rgba(21, 84, 62, 0.50), transparent 68%),
+    radial-gradient(52% 56% at 84% 14%, rgba(169, 133, 76, 0.09), transparent 62%),
+    radial-gradient(46% 52% at 8% 90%,  rgba(44, 107, 82, 0.18), transparent 60%);
+}
+
+.cta-inner {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: clamp(3rem, 5vw, 5rem) clamp(2rem, 4vw, 4rem);
+  align-items: start;
+}
+
+/* ---- Heading block : the editorial spine runs full width ---- */
+.cta-head {
+  grid-column: 1 / 13;
+}
+/* The grid's row gap supplies the head-to-action rhythm, so the
+   spine's own trailing margin is folded out to avoid double spacing. */
+.cta-head .sh { margin-bottom: 0; }
+
+/* Commanding display headline; keep the brass-italic final word. */
+.cta-head .sh-title.display { max-width: 18ch; }
+.cta-head .sh-title .st-word:last-child .st-inner {
+  font-style: italic;
+  color: var(--brass-soft);
+}
+.cta-head .sh-lead { max-width: 46ch; }
+
+/* ---- Action column : capture + buttons — offset right of the
+   spine for a real grid asymmetry, not a centered template. ---- */
+.cta-action {
+  grid-column: 6 / 13;
+  align-self: start;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(2.2rem, 4vw, 3.2rem);
+}
+
+/* hairline-underline email field */
+.cta-form {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1rem, 2vw, 1.4rem);
+}
+.cta-field {
+  position: relative;
+}
+.cta-field-label {
+  display: block;
+  margin-bottom: clamp(0.45rem, 1vh, 0.75rem);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-size: 0.66rem;
+  color: var(--fg-faint);
+}
+.cta-field-row {
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+}
+.cta-input {
+  flex: 1;
+  min-width: 0;
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--fg);
+  font-family: var(--serif);
+  font-size: clamp(1.4rem, 1rem + 1.3vw, 1.9rem);
+  line-height: 1.2;
+  letter-spacing: -0.005em;
+  padding: 0.15rem 0 0.5rem;
+}
+/* Very faint placeholder — ultra-refined, almost not there */
+.cta-input::placeholder {
+  color: var(--fg);
+  opacity: 0.38;
+}
+.cta-input:focus {
+  outline: none;
+}
+
+/* Architectural underline — 1.5px base rule + brass overlay on focus */
+.cta-underline {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1.5px;
+  background: var(--line-light-mid);
+}
+.cta-underline::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--brass);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.5s var(--ease-out);
+}
+.cta-field:focus-within .cta-underline::after {
+  transform: scaleX(1);
+}
+
+/* 44×44 circular submit — precise, minimal, refined */
+.cta-submit {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  border: 1px solid rgba(244, 241, 234, 0.35);
+  color: var(--fg);
+  background: transparent;
+  transition:
+    background     0.5s var(--ease-out),
+    color          0.5s var(--ease-out),
+    border-color   0.5s var(--ease-out);
+}
+.cta-submit svg {
+  transition: transform 0.5s var(--ease-out);
+}
+.cta-submit:hover {
+  background: rgba(244, 241, 234, 0.08);
+  border-color: rgba(244, 241, 234, 1);
+  color: var(--fg);
+}
+.cta-submit:hover svg {
+  transform: translateX(3px);
+}
+.cta-submit:focus-visible {
+  outline: 1px solid var(--brass-soft);
+  outline-offset: 3px;
+}
+
+/* inline confirmation — reserves its line, fades in */
+.cta-confirm {
+  min-height: 1.2em;
+  margin: 0;
+  color: var(--brass-soft);
+  letter-spacing: 0.04em;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out);
+}
+.cta-confirm.is-shown {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* CTA buttons */
+.cta-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: clamp(1.2rem, 2.4vw, 2rem);
+}
+
+/* ---- Studio details rail ---- */
+.cta-studio {
+  grid-column: 1 / 13;
+  /* No extra top margin — the grid row gap already separates the rail
+     from the action block; only the breathing rule above the details. */
+  padding-top: clamp(3rem, 5vw, 4rem);
+  border-top: 1px solid var(--hairline);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  /* Generous column gap so each detail has room to stand */
+  gap: clamp(2.4rem, 4vw, 4.4rem);
+}
+.cta-studio-item {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.3rem, 0.7vh, 0.5rem);
+  position: relative;
+}
+/* hairline separators between columns */
+.cta-studio-item + .cta-studio-item::before {
+  content: '';
+  position: absolute;
+  left: calc(-1 * clamp(1.2rem, 2vw, 2.2rem));
+  top: 0.1rem;
+  bottom: 0.1rem;
+  width: 1px;
+  background: var(--hairline);
+}
+/* Small-caps label — architectural, spare */
+.cta-studio-label {
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-size: 0.64rem;
+  color: var(--fg-faint);
+}
+.cta-studio-value {
+  font-family: var(--serif);
+  font-size: clamp(1.05rem, 0.92rem + 0.5vw, 1.35rem);
+  line-height: 1.2;
+  letter-spacing: -0.005em;
+  color: var(--fg);
+}
+a.cta-studio-value {
+  position: relative;
+  display: inline-block;
+  width: fit-content;
+  transition: color 0.5s var(--ease-out);
+}
+a.cta-studio-value::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  width: 100%;
+  height: 1px;
+  background: var(--brass-soft);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.5s var(--ease-out);
+}
+a.cta-studio-value:hover {
+  color: var(--brass-soft);
+}
+a.cta-studio-value:hover::after {
+  transform: scaleX(1);
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 1080px) {
+  .cta-action {
+    grid-column: 1 / 13;
+    max-width: 38rem;
+  }
+  .cta-studio { grid-template-columns: repeat(2, 1fr); }
+  /* drop the vertical rule on the start of each new row */
+  .cta-studio-item:nth-child(odd)::before { display: none; }
+}
+
+@media (max-width: 560px) {
+  .cta-action { max-width: none; }
+  .cta-input { font-size: clamp(1.35rem, 1.1rem + 2vw, 1.7rem); }
+  .cta-buttons { flex-direction: column; align-items: stretch; }
+  .cta-buttons .btn { width: 100%; }
+  .cta-buttons .btn--ghost { width: auto; }
+
+  .cta-studio {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .cta-studio-item {
+    padding-block: clamp(1.2rem, 4vw, 1.6rem);
+  }
+  /* swap vertical rules for horizontal ones when stacked */
+  .cta-studio-item::before { display: none !important; }
+  .cta-studio-item + .cta-studio-item {
+    border-top: 1px solid var(--hairline);
+  }
+}

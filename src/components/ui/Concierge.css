@@ -1,0 +1,22 @@
+/* Concierge — fixed WhatsApp disc, bottom-right. Static, no hover
+   effect. Sits under the nav + modals. */
+.concierge {
+  position: fixed;
+  right: clamp(1rem, 2.5vw, 2rem);
+  bottom: clamp(1rem, 2.5vw, 2rem);
+  z-index: 900;
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: var(--emerald);
+  color: #FFFFFF;
+  box-shadow: 0 10px 30px rgba(7, 37, 27, 0.28);
+  text-decoration: none;
+}
+.concierge-icon { display: grid; place-items: center; }
+
+@media (max-width: 600px) {
+  .concierge { width: 50px; height: 50px; }
+}

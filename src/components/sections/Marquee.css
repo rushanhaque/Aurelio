@@ -1,0 +1,55 @@
+.mrq {
+  background: #FFFFFF;
+  overflow: hidden;
+  padding-block: 1.15rem;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.mrq-track {
+  display: flex;
+  width: max-content;
+  animation: mrqScroll 88s linear infinite;
+}
+
+/* slow to a stop so the eye can read a term */
+.mrq:hover .mrq-track { animation-play-state: paused; }
+
+.mrq-list {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  flex-shrink: 0;
+}
+
+.mrq-item {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding-inline: 1.4rem;
+  font-family: var(--sans);
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--emerald);
+  white-space: nowrap;
+}
+
+.mrq-dot {
+  font-size: 0.55rem;
+  color: var(--emerald);
+  opacity: 0.6;
+  flex-shrink: 0;
+}
+
+@keyframes mrqScroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mrq-track { animation: none; }
+}

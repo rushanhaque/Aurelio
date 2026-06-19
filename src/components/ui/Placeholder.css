@@ -1,0 +1,144 @@
+/* ============================================================
+   Placeholder — clean flat image stand-in. White card, a
+   barely-there emerald-tint fill, emerald registration marks.
+   No gradients, no metal sheen. Rounded corners.
+   ============================================================ */
+.ph {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border-radius: var(--radius);
+  background: #FFFFFF;
+  border: 1px solid var(--line);
+  isolation: isolate;
+  color: var(--emerald);
+}
+
+/* Full-bleed mode — fills its positioned parent (panels, hero) */
+.ph--fill {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  border-radius: 0;
+}
+
+/* Real photography — when a `src` is supplied the figure becomes a clean
+   image frame: the stand-in chrome (tint, ticks, glyph, label, mark) is
+   hidden and the photo covers the frame. */
+.ph-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+  /* blur-up: fade in from a soft blur once decoded (no transform, so the
+     hover-zoom transforms elsewhere are untouched) */
+  opacity: 0;
+  filter: blur(14px);
+  transition: opacity 0.7s var(--ease-silk), filter 0.8s var(--ease-silk);
+  will-change: opacity, filter;
+}
+.ph-img.is-loaded { opacity: 1; filter: blur(0); }
+@media (prefers-reduced-motion: reduce) {
+  .ph-img { opacity: 1; filter: none; transition: none; }
+}
+/* When the placeholder is in "contain" mode the image sits centred with
+   breathing room — perfect for product shots on a solid-colour tile. */
+.ph--contain .ph-img {
+  object-fit: contain;
+  inset: 6%;
+  width: 88%;
+  height: 88%;
+}
+.ph--photo { background: rgba(14, 59, 44, 0.04); }
+.ph--photo .ph-fill,
+.ph--photo .ph-center,
+.ph--photo .ph-tick,
+.ph--photo .ph-index,
+.ph--photo .ph-mark { display: none; }
+
+/* Flat tinted fill — one solid wash of the emerald at low alpha.
+   inset bleed keeps the slow parallax drift from showing edges. */
+.ph-fill {
+  position: absolute;
+  inset: -8% 0;
+  background: rgba(14, 59, 44, 0.05);
+  z-index: 0;
+}
+.ph-fill::after { content: none; }
+
+/* "dark" variant collapses to the same flat light tint */
+.ph--dark { background: #FFFFFF; border-color: var(--line); color: var(--emerald); }
+.ph--dark .ph-fill { background: rgba(14, 59, 44, 0.06); }
+.ph--dark .ph-fill::after { content: none; }
+
+/* Registration ticks at the corners — architectural drawing cue. */
+.ph-tick { position: absolute; width: 14px; height: 14px; z-index: 2; opacity: 0.45; }
+.ph-tick::before, .ph-tick::after { content: ''; position: absolute; background: currentColor; }
+.ph-tick::before { width: 14px; height: 1px; top: 0; }
+.ph-tick::after  { width: 1px; height: 14px; left: 0; }
+.ph-tick--tl { top: 14px; left: 14px; }
+.ph-tick--tr { top: 14px; right: 14px; transform: scaleX(-1); }
+.ph-tick--bl { bottom: 14px; left: 14px; transform: scaleY(-1); }
+.ph-tick--br { bottom: 14px; right: 14px; transform: scale(-1); }
+
+.ph-index {
+  position: absolute;
+  top: 13px; left: 16px;
+  z-index: 3;
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.6;
+}
+
+.ph-center {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.7rem;
+  text-align: center;
+  padding: 1rem;
+}
+.ph-play {
+  width: 64px; height: 64px;
+  border-radius: 50%;
+  border: 1px solid currentColor;
+  display: grid; place-items: center;
+  opacity: 0.65;
+  transition: transform 0.6s var(--ease-out), opacity 0.4s;
+}
+.ph:hover .ph-play { transform: scale(1.08); opacity: 1; }
+.ph-label {
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+.ph-caption {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 1.05rem;
+  opacity: 0.55;
+  max-width: 22ch;
+  line-height: 1.3;
+}
+.ph-mark {
+  position: absolute;
+  bottom: 13px; right: 16px;
+  z-index: 3;
+  font-family: var(--sans);
+  font-size: 0.6rem;
+  letter-spacing: 0.34em;
+  opacity: 0.38;
+}

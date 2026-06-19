@@ -1,0 +1,132 @@
+/* ============================================================
+   Gallery — "Selected Works"
+   A packed collage (three-column masonry) on white. Each tile
+   keeps its natural ratio and crossfades from its rest image to
+   its hover ("lit") image — a lamp lights, a candle catches.
+   ============================================================ */
+
+.gal {
+  background: #FFFFFF;
+  overflow: hidden;
+}
+
+.gal-head-action {
+  margin-top: clamp(1.2rem, 2vw, 2rem);
+  display: flex;
+  justify-content: flex-end;
+  white-space: nowrap;
+}
+
+/* ============================================================
+   COLLAGE — a packed three-column masonry; tiles keep their
+   natural ratios and tile together with tight gaps
+   ============================================================ */
+.gal-grid {
+  columns: 3;
+  column-gap: clamp(0.7rem, 1.4vw, 1.2rem);
+}
+
+.gal-item {
+  position: relative;
+  break-inside: avoid;
+  margin-bottom: clamp(0.7rem, 1.4vw, 1.2rem);
+}
+
+/* ---- the framed figure ---- */
+.gal-fig {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius);
+  border: 1px solid rgba(14, 59, 44, 0.10);
+  background: #FFFFFF;
+  transition:
+    box-shadow   var(--t-slow) var(--ease-silk),
+    border-color 0.9s var(--ease-silk);
+}
+.gal-item:hover .gal-fig {
+  box-shadow: var(--shadow-lift);
+  border-color: rgba(14, 59, 44, 0.30);
+}
+
+/* ---- rest → hover crossfade: the piece comes alive (a lamp lights) ---- */
+.gal-img {
+  will-change: opacity;
+  backface-visibility: hidden;
+}
+/* hover image sits behind at full opacity — always visible beneath */
+.gal-img--on {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 1;
+  z-index: 0;
+}
+/* cover image sits on top; fades away on hover to reveal what's beneath */
+.gal-img--off {
+  display: block;
+  width: 100%;
+  height: auto;
+  position: relative;
+  z-index: 1;
+  opacity: 1;
+  transition: opacity 1.1s ease 0.12s;
+}
+.gal-item:hover .gal-img--off { opacity: 0; }
+
+/* ---- brass foot sweep on hover ---- */
+.gal-fig::after {
+  content: '';
+  position: absolute;
+  left: 0; bottom: 0;
+  height: 1px;
+  width: 100%;
+  background: var(--brass);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.9s var(--ease-reveal);
+  pointer-events: none;
+  z-index: 2;
+}
+.gal-item:hover .gal-fig::after { transform: scaleX(1); }
+
+/* ---- caption ---- */
+.gal-cap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  margin-top: clamp(0.9rem, 1.4vw, 1.25rem);
+  padding-right: 0.5rem;
+}
+.gal-cap-name {
+  font-family: var(--serif);
+  font-size: var(--fs-h3);
+  font-style: italic;
+  line-height: 1.1;
+  color: var(--ink);
+  transition: color var(--t) var(--ease-silk);
+}
+.gal-item:hover .gal-cap-name {
+  color: var(--brass);
+}
+.gal-cap-meta { font-variant-numeric: tabular-nums; }
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 900px) {
+  .gal-grid { columns: 2; }
+}
+
+@media (max-width: 560px) {
+  .gal-grid { columns: 1; }
+  .gal-cap-name { font-size: clamp(1.35rem, 6vw, 1.7rem); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gal-img { transition: opacity 0.4s ease !important; }
+  .gal-item:hover .gal-img { transform: none !important; }
+  .gal-fig::after { transition: none !important; }
+  .gal-item:hover .gal-cap-name { transform: none !important; }
+}

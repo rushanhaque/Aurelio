@@ -1,0 +1,140 @@
+/* ============================================================
+   SectionHeader — the editorial spine. The kicker is now a
+   prominent section label whose letters cascade up on entry,
+   announcing each new section.
+   ============================================================ */
+
+.sh {
+  width: 100%;
+  margin-bottom: clamp(2.6rem, 4.2vw, 4.4rem);
+}
+
+/* ---- top row: section label (left) + index (right) ---- */
+.sh-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-bottom: clamp(1.7rem, 2.6vw, 2.6rem);
+}
+
+/* marker + kicker, grouped so the diamond rides beside the label */
+.sh-label {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(0.5rem, 0.3rem + 0.5vw, 0.95rem);
+  min-width: 0;
+}
+
+/* the section-opening diamond — a bold emerald cue (brand ◆ motif) that
+   makes the arrival of a new section unmistakable */
+.sh-mark {
+  flex-shrink: 0;
+  color: var(--emerald);
+  font-size: clamp(0.5rem, 0.34rem + 0.5vw, 0.9rem);
+  line-height: 1;
+  transform-origin: center;
+}
+
+/* the section label — large, tracked, emerald; letters in masks */
+.sh-kicker {
+  display: block;
+  font-family: var(--sans);
+  font-size: clamp(1.1rem, 0.8rem + 1.2vw, 2.1rem);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--emerald);
+  line-height: 1.05;
+}
+.sh-kicker-mask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  line-height: 1.05;
+}
+.sh-kicker-ch {
+  display: inline-block;
+  white-space: pre;       /* preserve the inter-word space */
+  will-change: transform;
+}
+
+.sh-index {
+  flex-shrink: 0;
+  font-family: var(--sans);
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  color: var(--fg-faint);
+  font-variant-numeric: tabular-nums;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.18em;
+  white-space: nowrap;
+}
+.sh-paren { color: var(--fg-faint); opacity: 0.6; }
+.sh-num   { color: var(--emerald); font-weight: 600; }
+.sh-slash { color: var(--emerald); margin-inline: 0.12em; }
+.sh-total { opacity: 0.7; }
+
+/* ---- the drawing hairline, with a bold emerald lead-in tab ---- */
+.sh-rule {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 1px;
+  background: var(--hairline);
+  transform-origin: left center;
+  transform: scaleX(1);
+  will-change: transform;
+}
+/* the emerald "tab" — a short, solid bar marking where the section begins */
+.sh-rule::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: -1px;
+  width: clamp(36px, 6vw, 72px);
+  height: 3px;
+  background: var(--emerald);
+}
+
+/* ---- headline + lead ---- */
+.sh-body {
+  margin-top: clamp(1.6rem, 2.6vw, 2.5rem);
+}
+
+.sh-title {
+  color: var(--fg);
+  max-width: 18ch;
+}
+.sh-title.display { max-width: 14ch; }
+
+/* One house size for every section subheading — the Collections title's size.
+   Scoped to .sh so it overrides whatever h1/h2/display utility is passed via
+   titleClass, keeping all section headings uniform. */
+.sh .sh-title { font-size: clamp(1.9rem, 1rem + 2.4vw, 3.8rem); }
+
+.sh-lead {
+  margin-top: clamp(1.5rem, 2.4vw, 2.2rem);
+  max-width: 52ch;
+}
+
+/* ============================================================
+   ALIGN — center variant (for closing CTA-style headers)
+   ============================================================ */
+.sh--center { text-align: center; }
+.sh--center .sh-top { justify-content: center; gap: clamp(1.5rem, 4vw, 3rem); }
+.sh--center .sh-kicker { display: inline-block; }
+.sh--center .sh-title { max-width: none; margin-inline: auto; }
+.sh--center .sh-lead { margin-inline: auto; }
+.sh--center .sh-rule { transform-origin: center; }
+.sh--center .sh-rule::before { left: 50%; transform: translateX(-50%); }
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 600px) {
+  .sh-top { gap: 1rem; flex-wrap: wrap; }
+  .sh-kicker { letter-spacing: 0.1em; }
+  .sh-title { max-width: none; }
+}

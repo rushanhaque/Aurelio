@@ -1,0 +1,97 @@
+/* ============================================================
+   Materials — six-panel dark showcase on emerald-deep.
+   3 × 2 desktop grid; each card: portrait image + info block.
+   ============================================================ */
+
+.mat {
+  background: var(--emerald-deep);
+  isolation: isolate;
+}
+
+.mat-container {
+  position: relative;
+  z-index: 1;
+}
+
+.mat-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(2.4rem, 3.5vw, 4rem) clamp(1.6rem, 2.6vw, 3rem);
+  margin-top: clamp(3rem, 5vw, 5.5rem);
+}
+
+/* ---- Card ---- */
+.mat-card {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.9rem, 1.3vw, 1.3rem);
+}
+
+/* Portrait figure — subtle brass frame */
+.mat-fig { overflow: hidden; }
+
+.mat-fig .ph {
+  border: 1px solid rgba(196, 163, 106, 0.12);
+  transition: transform 0.75s var(--ease-silk);
+}
+.mat-card:hover .mat-fig .ph {
+  transform: scale(1.03);
+}
+
+/* ---- Info ---- */
+.mat-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.28rem;
+}
+
+.mat-index {
+  font-family: var(--sans);
+  font-size: 0.62rem;
+  font-weight: 300;
+  letter-spacing: 0.18em;
+  color: var(--brass-soft);
+  opacity: 0.52;
+  margin-bottom: 0.08rem;
+}
+
+.mat-name {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(1.4rem, 1.1rem + 1.1vw, 2rem);
+  font-weight: 300;
+  color: var(--fg);
+  line-height: 1.1;
+  letter-spacing: -0.005em;
+  margin: 0;
+}
+
+.mat-quality {
+  font-family: var(--sans);
+  font-size: 0.6rem;
+  font-weight: 400;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--brass-soft);
+  opacity: 0.65;
+  margin-top: 0.18rem;
+}
+
+.mat-body {
+  font-family: var(--sans);
+  font-size: 0.84rem;
+  line-height: 1.62;
+  color: var(--fg-soft);
+  max-width: 38ch;
+  margin-top: 0.45rem;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 900px) {
+  .mat-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 560px) {
+  .mat-grid { grid-template-columns: 1fr; gap: 2.8rem 0; }
+  .mat-body { max-width: none; }
+}

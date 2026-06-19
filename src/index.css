@@ -1,0 +1,414 @@
+/* ============================================================
+   AURELIO V2 — GLOBAL DESIGN SYSTEM
+   Every token, every type class, every motion constant.
+   Sections consume tokens only — no ad-hoc values.
+   ============================================================ */
+
+:root {
+  /* ---- Palette — pure white + ONE solid emerald ----------- */
+  /* Every surface is white. Every green is this exact emerald.
+     No tints, no second shade, no gradients. Hierarchy comes from
+     opacity of the one emerald, never from a different colour. */
+  --white:         #FFFFFF;
+  --emerald:       #0E3B2C;   /* THE emerald — the only colour besides white/black */
+
+  /* legacy surface names → all collapse to pure white */
+  --paper:         #FFFFFF;
+  --ivory-2:       #FFFFFF;
+  --cream:         #FFFFFF;
+  --mist:          #FFFFFF;
+  --emerald-tint:  #FFFFFF;
+
+  /* legacy emerald variants → all collapse to the one shade */
+  --emerald-deep:  #0E3B2C;
+  --emerald-mid:   #0E3B2C;
+  --emerald-soft:  #0E3B2C;
+
+  /* text — the emerald, plus opacities for hierarchy (still one hue) */
+  --ink:           #0E3B2C;
+  --ink-soft:      rgba(14, 59, 44, 0.60);
+  --ink-faint:     rgba(14, 59, 44, 0.40);
+
+  /* "ivory" was light text on dark grounds; with no dark grounds left it
+     resolves to emerald so old `color: var(--ivory)` stays readable on white.
+     The handful of `background: var(--ivory)` uses are set to white locally. */
+  --ivory:         #0E3B2C;
+
+  /* the old brass accent is now the same single emerald */
+  --brass:         #0E3B2C;
+  --brass-soft:    #0E3B2C;
+  --brass-pale:    rgba(14, 59, 44, 0.30);
+
+  /* hairlines — emerald at low alpha */
+  --line:          rgba(14, 59, 44, 0.12);
+  --line-mid:      rgba(14, 59, 44, 0.20);
+  --line-strong:   rgba(14, 59, 44, 0.30);
+  --line-light:    rgba(14, 59, 44, 0.12);
+  --line-light-mid:rgba(14, 59, 44, 0.22);
+
+  /* contextual aliases (now both contexts are white grounds) */
+  --bg:       #FFFFFF;
+  --fg:       #0E3B2C;
+  --fg-soft:  rgba(14, 59, 44, 0.60);
+  --fg-faint: rgba(14, 59, 44, 0.40);
+  --hairline: var(--line);
+
+  /* ---- Type families -------------------------------------- */
+  --display: 'Cinzel', 'Trajan Pro', 'Times New Roman', serif; /* wordmark — inscriptional caps */
+  --serif:   'Fraunces', 'Times New Roman', Georgia, serif;    /* headlines + editorial */
+  --sans:    'Jost', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  /* ---- Fluid type scale ----------------------------------- */
+  /* Hero lines — large, but HEIGHT-aware (vh in the preferred term) so the
+     whole title card always clears one screen, even on short laptops. */
+  --fs-hero:    clamp(2.3rem, 2.3vw + 3vh, 5.2rem);
+  --fs-hero-sm: clamp(1rem, 0.7vw + 1.2vh, 1.95rem);   /* companion whisper */
+
+  --fs-display: clamp(3rem, 1.5rem + 6.1vw, 8.8rem);
+  --fs-h1:      clamp(2.2rem, 1.4rem + 3.5vw, 5rem);
+  --fs-h2:      clamp(1.8rem, 1.2rem + 2.4vw, 3.6rem);
+  --fs-h3:      clamp(1.22rem, 1.05rem + 0.8vw, 1.7rem);
+  --fs-lead:    clamp(0.92rem, 0.88rem + 0.26vw, 1.1rem);
+  --fs-body:    clamp(0.87rem, 0.85rem + 0.12vw, 0.95rem);
+  --fs-small:   0.79rem;
+  --fs-eyebrow: 0.68rem;
+
+  /* ---- Spacing -------------------------------------------- */
+  /* Sections fill one viewport; this is only the in-flow breathing
+     room above/below centered content, plus fixed-nav clearance. */
+  --space-section: clamp(5rem, 3.2rem + 6vw, 9.5rem);
+  --nav-clear:     clamp(3.4rem, 5vh, 4.8rem);  /* one-screen pages only */
+  --gutter:        clamp(1.3rem, 0.8rem + 2.2vw, 3.6rem);
+  --maxw:          1440px;
+  --maxw-narrow:   1060px;
+
+  /* ---- Motion --------------------------------------------- */
+  /* power3.out — the house ease for most things */
+  --ease-out:  cubic-bezier(0.22, 1, 0.36, 1);
+  /* silkier, for slower large elements */
+  --ease-silk: cubic-bezier(0.16, 1, 0.3, 1);
+  /* symmetric in-out */
+  --ease-io:   cubic-bezier(0.65, 0, 0.35, 1);
+  /* sharp in, long out — for curtain/wipe animations */
+  --ease-reveal: cubic-bezier(0.08, 0.92, 0.26, 1);
+
+  --dur:      0.85s;
+  --dur-slow: 1.25s;
+
+  --radius: 14px;      /* rounded cards */
+  --radius-sm: 10px;   /* inputs, smaller chips */
+
+  /* ---- Elevation — soft, warm, barely-there (green-black, never pure black) */
+  --shadow-sm:    0 1px 2px rgba(12, 28, 21, 0.05);
+  --shadow-card:  0 2px 8px rgba(12, 28, 21, 0.05), 0 12px 30px rgba(12, 28, 21, 0.06);
+  --shadow-lift:  0 8px 20px rgba(12, 28, 21, 0.07), 0 26px 56px rgba(12, 28, 21, 0.10);
+  --shadow-brass: 0 6px 22px rgba(140, 100, 40, 0.16);
+
+  /* ---- Interaction — one set of durations + a shared lift distance */
+  --t-fast: 0.4s;
+  --t:      0.55s;
+  --t-slow: 0.85s;
+  --lift:   6px;
+
+  color-scheme: light;
+}
+
+/* ---- Smooth-scroll requirements (Lenis) ---- */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-stopped { overflow: hidden; }
+
+/* ---- Reset ---------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-optical-sizing: auto;   /* Fraunces: display contrast big, readable small */
+}
+
+body {
+  font-family: var(--sans);
+  font-size: var(--fs-body);
+  font-weight: 400;
+  line-height: 1.58;
+  color: var(--fg);
+  background: var(--bg);
+  letter-spacing: 0.012em;
+  overflow-x: hidden;
+  font-feature-settings: 'liga' 1, 'kern' 1;
+  text-wrap: pretty;          /* avoid orphans/runts in body copy */
+}
+
+/* Refined brand selection */
+::selection { background: var(--emerald); color: #FFFFFF; }
+
+/* Pure sparkling white — no edge vignette, no film grain, no overlays. */
+
+/* ---- Bespoke scrollbar — a fine solid-emerald thumb on a clear track ---- */
+html { scrollbar-width: thin; scrollbar-color: var(--emerald) transparent; }
+::-webkit-scrollbar { width: 9px; height: 9px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--emerald);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--emerald); background-clip: padding-box; }
+
+img, video, svg { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+ul { list-style: none; }
+
+/* Elegant, consistent keyboard focus — a fine brass ring.
+   Components may override with their own offset; this is the baseline.
+   Mouse/touch users never see it (only :focus-visible). */
+:focus-visible {
+  outline: 1px solid var(--brass-soft);
+  outline-offset: 3px;
+  border-radius: 1px;
+}
+:focus:not(:focus-visible) { outline: none; }
+
+/* Skip-to-content — visually hidden until a keyboard user focuses it. */
+.skip-link {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -120%);
+  z-index: 2000;
+  padding: 0.7rem 1.4rem;
+  background: var(--emerald);
+  color: #FFFFFF;
+  font-family: var(--sans);
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border-radius: 0 0 4px 4px;
+  transition: transform 0.25s ease;
+}
+.skip-link:focus {
+  transform: translate(-50%, 0);
+  outline: 2px solid #FFFFFF;
+  outline-offset: 2px;
+}
+
+/* Error-boundary fallback (top-level only; route-level reuses NotFoundPage). */
+.errbound {
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background: #FFFFFF;
+}
+.errbound-inner { max-width: 30rem; text-align: center; }
+.errbound-kicker {
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-bottom: 1.2rem;
+}
+.errbound-title {
+  font-family: var(--serif);
+  font-size: clamp(1.8rem, 1.2rem + 2vw, 2.8rem);
+  line-height: 1.05;
+  color: var(--ink);
+  margin-bottom: 1rem;
+}
+.errbound-lead {
+  font-family: var(--sans);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  margin-bottom: 1.8rem;
+}
+.errbound-btn {
+  display: inline-block;
+  font-family: var(--sans);
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #FFFFFF;
+  background: var(--emerald);
+  padding: 0.85rem 1.8rem;
+  border-radius: 3px;
+  transition: opacity 0.3s ease;
+}
+.errbound-btn:hover { opacity: 0.85; }
+
+/* ============================================================
+   TYPOGRAPHY PRIMITIVES
+   ============================================================ */
+
+.display {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--fs-display);
+  line-height: 0.94;
+  letter-spacing: -0.018em;
+}
+
+.h1 { font-family: var(--serif); font-weight: 400; font-size: var(--fs-h1); line-height: 1.0; letter-spacing: -0.014em; }
+.h2 { font-family: var(--serif); font-weight: 400; font-size: var(--fs-h2); line-height: 1.04; letter-spacing: -0.01em; }
+.h3 { font-family: var(--serif); font-weight: 400; font-size: var(--fs-h3); line-height: 1.14; letter-spacing: -0.005em; }
+
+.serif-italic { font-style: italic; font-family: var(--serif); font-weight: 400; }
+
+/* Cormorant Garamond renders beautifully with discretionary ligatures */
+.h1, .h2, .h3, .display, .serif-italic {
+  font-feature-settings: 'liga' 1, 'dlig' 1, 'kern' 1;
+  text-wrap: balance;          /* even line lengths on multi-line headings */
+}
+
+.lead {
+  font-family: var(--sans);
+  font-size: var(--fs-lead);
+  line-height: 1.6;
+  font-weight: 350;
+  color: var(--fg-soft);
+  letter-spacing: 0.01em;
+}
+
+.eyebrow {
+  font-family: var(--sans);
+  font-size: var(--fs-eyebrow);
+  font-weight: 600;
+  letter-spacing: 0.30em;
+  text-transform: uppercase;
+  color: var(--emerald-soft);
+}
+.on-dark .eyebrow { color: var(--brass-soft); }
+
+.body-muted { color: var(--fg-soft); }
+.caption {
+  font-family: var(--sans);
+  font-size: var(--fs-small);
+  letter-spacing: 0.04em;
+  color: var(--fg-faint);
+  line-height: 1.5;
+}
+
+/* ============================================================
+   PRINT-GRADE NUMERALS
+   Running prose gets oldstyle figures (a "1972" that sits in the
+   line like type, not a spreadsheet). Data/labels keep their own
+   tabular-lining figures, set locally — those win by cascade.
+   ============================================================ */
+.lead,
+.her-p,
+.man-support,
+.man-line,
+.cat-panel-desc,
+.atl-stage-body,
+.jrn-card-quote,
+.jrn-pull,
+.tl-node-text,
+.ph-caption {
+  font-variant-numeric: oldstyle-nums proportional-nums;
+}
+
+/* Optical margin alignment for quote marks (Safari; harmless elsewhere) */
+.jrn-pull,
+.jrn-card-quote,
+.man-line { hanging-punctuation: first last; }
+
+/* ============================================================
+   LAYOUT HELPERS
+   ============================================================ */
+
+.container {
+  width: 100%;
+  max-width: var(--maxw);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+.container--narrow { max-width: var(--maxw-narrow); }
+
+/* Standard section: natural height, generous vertical breathing room.
+   (Only Hero, Categories and Atelier are constrained to one screen —
+   each via its own scoped CSS, not this rule.) */
+.section { padding-block: var(--space-section); position: relative; }
+
+/* Formerly the dark-surface context. Every ground is white now, so this
+   just keeps the same emerald-on-white tokens — sections that still carry
+   .on-dark render identically to the rest of the site. */
+.on-dark {
+  --bg:        #FFFFFF;
+  --fg:        #0E3B2C;
+  --fg-soft:   rgba(14, 59, 44, 0.60);
+  --fg-faint:  rgba(14, 59, 44, 0.40);
+  --hairline:  var(--line);
+  background: #FFFFFF;
+  color: #0E3B2C;
+}
+
+.hairline { height: 1px; width: 100%; background: var(--hairline); border: 0; }
+
+/* Architectural cross — used as a section marker detail */
+.cross::before, .cross::after {
+  content: '';
+  position: absolute;
+  background: var(--hairline);
+}
+.cross::before { width: 16px; height: 1px; top: 8px; left: 0; }
+.cross::after  { width: 1px; height: 16px; top: 0; left: 8px; }
+
+/* Grain textures removed for the clean white aesthetic. */
+.grain::after { content: none; }
+
+/* ============================================================
+   FILM GRAIN — a barely-there printed-catalogue tooth laid over
+   the whole site. Static (not flickering), grayscale, multiplied
+   onto the page so flat white reads as paper. Tune via opacity.
+   ============================================================ */
+.film-grain {
+  position: fixed;
+  inset: 0;
+  z-index: 100;                 /* over content, under the nav (1000) + modals */
+  pointer-events: none;
+  opacity: 0.3;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='ag'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23ag)'/%3E%3C/svg%3E");
+  background-size: 160px 160px;
+}
+
+/* ============================================================
+   SEC-GRAIN — animated cinematic film grain for dark sections.
+   Add <div class="sec-grain" aria-hidden="true" /> as first
+   child of any dark section that sets isolation: isolate.
+   Background-position shift with stitchTiles='stitch' keeps
+   the noise seamlessly tiled — no oversize element needed.
+   ============================================================ */
+.sec-grain { display: none; }
+
+@keyframes grainBg {
+  0%   { background-position:    0px    0px; }
+  14%  { background-position:  -30px  -40px; }
+  28%  { background-position:   50px   22px; }
+  42%  { background-position:  -22px   56px; }
+  57%  { background-position:   62px  -22px; }
+  71%  { background-position:  -46px   28px; }
+  85%  { background-position:   32px   50px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sec-grain { animation: none; }
+}
+
+/* ============================================================
+   REDUCED MOTION
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

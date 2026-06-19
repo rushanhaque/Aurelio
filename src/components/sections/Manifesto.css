@@ -1,0 +1,126 @@
+/* ============================================================
+   The Aurelio Standard — light paper, monograph air.
+   ============================================================ */
+
+.man {
+  background: #FFFFFF;
+  position: relative;
+  overflow: hidden;
+}
+
+/* faint corner numeral — folio mark, not decoration */
+.man-bg-num {
+  position: absolute;
+  bottom: -0.16em;
+  right: clamp(-1rem, -1vw, 0rem);
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(16rem, 30vw, 34rem);
+  line-height: 1;
+  color: rgba(14, 59, 44, 0.05); /* faint emerald ghost on white */
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+}
+
+.man-inner {
+  position: relative;
+  z-index: 1;
+  /* Use the standard container width so the kicker and statement sit at the
+     same left gutter as every other section (was a narrow centered column). */
+}
+
+/* The spine here carries no headline; zero the empty body's reserved
+   top space, and give a generous, editorial gap before the statement. */
+.man-inner .sh { margin-bottom: clamp(2.2rem, 4vw, 3.6rem); }
+.man-inner .sh-body { margin-top: 0; }
+
+/* ============================================================
+   THE STATEMENT — two-tone serif, block lines
+   ============================================================ */
+.man-statement {
+  margin-bottom: clamp(3.4rem, 7vw, 6rem);
+}
+
+.man-line {
+  font-family: var(--serif);
+  font-weight: 400;
+  display: block;
+}
+
+/* upright lines */
+.man-line--1 {
+  font-size: clamp(2.4rem, 1.4rem + 3.6vw, 5.4rem);
+  line-height: 1.04;
+  letter-spacing: -0.014em;
+  color: var(--fg);   /* contextual → ivory on dark */
+}
+
+/* the turn — warm brass italic, the single emotional accent on dark */
+.man-line--2 {
+  font-size: clamp(2.7rem, 1.5rem + 4.4vw, 6rem);
+  line-height: 1.02;
+  letter-spacing: -0.016em;
+  color: var(--brass-soft);   /* gold on deep green — richer than emerald-on-emerald */
+  margin-top: 0.16em;
+}
+
+/* ============================================================
+   FOOT — supporting prose + aside (credo + cta)
+   ============================================================ */
+.man-foot {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: start;
+  padding-top: clamp(2.4rem, 4vw, 3.6rem);
+  border-top: 1px solid var(--hairline);   /* flips to line-light on dark */
+}
+
+.man-support {
+  max-width: 46ch;
+}
+
+.man-aside {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: clamp(1.8rem, 3vw, 2.6rem);
+}
+
+/* credo — stacked, each with a brass tick */
+.man-credo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+.man-credo-item {
+  position: relative;
+  padding-left: 1.6rem;
+  font-family: var(--sans);
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--fg-soft);   /* contextual → muted ivory on dark */
+}
+.man-credo-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.5em;
+  width: 0.9rem;
+  height: 1px;
+  background: var(--brass);
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 760px) {
+  .man-foot {
+    grid-template-columns: 1fr;
+    gap: clamp(2rem, 6vw, 2.6rem);
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "name": "aurelio",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Aurelio — Atelier of Fine Metalware. Premium handcrafted metal goods.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "engines": {
+    "node": "20.x"
+  },
+  "dependencies": {
+    "@gsap/react": "^2.1.2",
+    "gsap": "^3.13.0",
+    "lenis": "^1.1.18",
+    "motion": "^12.40.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.4",
+    "vite": "^5.4.11"
+  }
+}

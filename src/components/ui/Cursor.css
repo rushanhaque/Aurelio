@@ -1,0 +1,29 @@
+.cur-dot,
+.cur-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 10000;
+  border-radius: 50%;
+  will-change: transform;
+}
+
+.cur-dot {
+  width: 5px;
+  height: 5px;
+  background: var(--brass);
+}
+
+.cur-ring {
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--brass);
+  opacity: 0.55;
+}
+
+/* Hide system cursor only on devices where our cursor is active */
+.has-cursor,
+.has-cursor * {
+  cursor: none !important;
+}

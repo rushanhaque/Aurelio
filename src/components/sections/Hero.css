@@ -1,0 +1,158 @@
+/* ============================================================
+   Hero — one centered statement on pure white. Monumental
+   Cormorant, a single emerald accent, architectural corner
+   marks, and a great deal of air. Minimal by design.
+   ============================================================ */
+
+.hero {
+  position: relative;
+  height: 100svh;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #07251B;          /* deep emerald — fallback before the film loads */
+  isolation: isolate;
+  padding: calc(var(--nav-clear) + 1rem) var(--gutter) clamp(4rem, 10vh, 7rem);
+}
+
+/* ---- full-bleed background film ---- */
+.hero-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+/* A whisper of darkening only — just enough to anchor the white type over a
+   bright frame. The heavy overlay is gone. */
+.hero-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: transparent;
+  /* a slight frosted overlay over the film */
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+}
+
+/* ---- centred content column ---- */
+.hero-inner {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 64rem;
+  will-change: transform, opacity;
+}
+
+/* ---- eyebrow — flanked by fine emerald rules ---- */
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(0.9rem, 2vw, 1.5rem);
+  font-family: var(--sans);
+  font-size: var(--fs-eyebrow);
+  font-weight: 600;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: #FFFFFF;
+  margin-bottom: clamp(1.8rem, 4.5vh, 3.2rem);
+  will-change: transform, opacity;
+}
+.hero-eyebrow-rule {
+  width: clamp(1.8rem, 4vw, 3rem);
+  height: 1px;
+  background: rgba(255, 255, 255, 0.7);
+  transform-origin: center;
+  flex-shrink: 0;
+}
+.hero-eyebrow-text { white-space: nowrap; }
+
+/* ---- monumental serif title — one row ---- */
+.hero-title {
+  font-family: var(--serif);
+  color: #FFFFFF;
+  margin-bottom: clamp(2rem, 4.5vh, 3.2rem);
+  will-change: transform;
+}
+.hero-line {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.2em;
+}
+.hero-line-inner {
+  display: block;
+  white-space: nowrap;          /* keep the statement on a single row */
+  line-height: 1;
+  will-change: transform;
+}
+.hero-w { display: inline; }
+
+/* the two large words — roman / italic */
+.hero-w--1,
+.hero-w--3 {
+  font-weight: 400;
+  font-size: clamp(1.55rem, 7vw, 5rem);
+  letter-spacing: -0.022em;
+}
+.hero-w--3 { font-style: italic; letter-spacing: -0.016em; }
+
+/* the small italic hinge, on the same baseline */
+.hero-w--2 {
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(0.8rem, 3.1vw, 2.2rem);
+  letter-spacing: 0.01em;
+  color: rgba(255, 255, 255, 0.78);
+  margin-inline: clamp(0.35rem, 1.3vw, 1rem);
+}
+
+/* ---- CTAs over the dark film — a refined ghost link ---- */
+.hero .btn--ghost {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  transition: color 0.5s var(--ease-out), letter-spacing 0.6s var(--ease-out);
+}
+.hero .btn--ghost:hover {
+  color: #FFFFFF;
+  letter-spacing: 0.28em;
+}
+.hero .btn--ghost .btn-label::after {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+/* ---- CTAs ---- */
+.hero-ctas {
+  position: absolute;
+  bottom: clamp(2rem, 5vh, 4rem);
+  left: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(1rem, 3vw, 2.2rem);
+  flex-wrap: wrap;
+  will-change: transform, opacity;
+  z-index: 10;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 600px) {
+  .hero-eyebrow {
+    flex-wrap: wrap;
+    justify-content: center;
+    letter-spacing: 0.2em;
+    gap: 0.6rem;
+    font-size: 0.6rem;
+  }
+  .hero-eyebrow-rule { display: none; }
+  .hero-eyebrow-text { white-space: normal; }
+}

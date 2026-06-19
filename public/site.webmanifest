@@ -1,0 +1,12 @@
+{
+  "name": "Aurelio — Metal & Wood Atelier by AF International",
+  "short_name": "Aurelio",
+  "description": "Handcrafted furniture, lighting, urns and objets in metal and wood — made by hand in Moradabad, India, since 2008.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#07251B",
+  "theme_color": "#0E3B2C",
+  "icons": [
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}
