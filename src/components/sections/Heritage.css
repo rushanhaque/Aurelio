@@ -81,6 +81,7 @@
   flex: 1;
   justify-content: center;
   min-height: 0;
+  min-width: 0;          /* never let content force horizontal overflow */
 }
 
 /* Spine tightening — keeps three stacked blocks inside one screen */
@@ -223,6 +224,15 @@
 
 /* Tablet — 2×2 stat grid */
 @media (max-width: 900px) {
+  /* let the section breathe to its content rather than forcing one screen;
+     keeps the stacked prose + stats from cramping on shorter viewports */
+  .her {
+    min-height: 100svh;
+    justify-content: flex-start;
+    padding-block: var(--nav-clear) clamp(2rem, 5vh, 3.5rem);
+  }
+  .her-body { justify-content: center; gap: clamp(1.4rem, 3vh, 2.2rem); }
+
   .her-stats {
     grid-template-columns: repeat(2, 1fr);
     row-gap: clamp(2.6rem, 6vw, 3.6rem);
@@ -233,29 +243,66 @@
   .her-stat {
     padding-inline: clamp(1rem, 4vw, 2rem);
     padding-block: 0;
+    min-width: 0;
   }
   .her-stat:first-child,
   .her-stat:last-child { padding-inline: clamp(1rem, 4vw, 2rem); }
-  .her-stat::after { left: clamp(1rem, 4vw, 2rem); }
-  .her-stat:first-child::after,
-  .her-stat:last-child::after { left: clamp(1rem, 4vw, 2rem); }
+  .her-stat-line { left: clamp(1rem, 4vw, 2rem); }
+  .her-stat:first-child .her-stat-line,
+  .her-stat:last-child  .her-stat-line { left: clamp(1rem, 4vw, 2rem); }
   .her-stat:nth-child(odd) { border-right: 1px solid var(--line-light); }
 }
 
-/* Mobile — single column */
-@media (max-width: 560px) {
-  .her-prose { max-width: 100%; }
+/* Phone — single column, stacked, full-bleed film */
+@media (max-width: 640px) {
+  .her {
+    /* a touch more vertical air around the content, never cramped */
+    padding-block: var(--nav-clear) clamp(2.4rem, 7vw, 3.5rem);
+    justify-content: center;
+  }
+
+  /* slightly stronger scrim + softer film so type stays crisp on small,
+     bright phone screens (transform/opacity-safe; no layout animation) */
+  .her-scrim { background: rgba(7, 37, 27, 0.52); }
+  .her-video { filter: blur(4px); transform: scale(1.06); }
+
+  /* prose goes full width; cap line length for readability */
+  .her-prose { max-width: 100%; gap: clamp(0.7rem, 2.4vw, 1rem); }
+  .her-p { max-width: 100%; line-height: 1.6; }
+
+  /* tighten the big serif heading so it never overflows the gutter */
+  .her .sh-title { letter-spacing: -0.015em; }
+
+  .her-rule { margin-top: clamp(1.8rem, 6vw, 2.6rem); }
 
   .her-stats {
     grid-template-columns: 1fr;
     row-gap: 0;
-    padding-block: clamp(1.8rem, 5vw, 2.6rem);
+    padding-block: clamp(1.6rem, 5vw, 2.4rem);
   }
   .her-stat {
-    padding: clamp(1.6rem, 6vw, 2.4rem) 0;
+    display: flex;
+    flex-direction: column;
+    padding: clamp(1.5rem, 6vw, 2.2rem) 0;
+    min-width: 0;
   }
   .her-stat:nth-child(odd) { border-right: 0; }
   .her-stat + .her-stat    { border-top: 1px solid var(--line-light); }
-  .her-stat::after         { left: 0; }
-  .her-stat-num { font-size: clamp(3.6rem, 12vw, 5rem); }
+  .her-stat-line           { left: 0; }
+  .her-stat-num {
+    font-size: clamp(3.2rem, 14vw, 4.6rem);
+    padding-top: 0.35rem;
+  }
+  .her-stat-label { font-size: 0.7rem; }
+
+  /* expand the drop-cap a hair so the opening paragraph reads as deliberate */
+  .her-drop { font-size: 2.8em; }
+}
+
+/* Small phone — final tightening so nothing bleeds past the edge */
+@media (max-width: 400px) {
+  .her-stat-num { font-size: clamp(2.9rem, 15vw, 3.6rem); }
+  .her-p { font-size: clamp(0.95rem, 0.9rem + 0.6vw, 1.05rem); }
+  .her-stat-tag { letter-spacing: 0.18em; }
+  .her-stat-label { letter-spacing: 0.1em; }
 }

@@ -33,7 +33,7 @@ export default function Timeline() {
           index="06"
           total="10"
           title="The path a piece travels."
-          lead="Every commission passes through the same six stations — no shortcuts, no exceptions. Hover a station to follow the thread."
+          lead="Every commission passes through the same six stations — no shortcuts, no exceptions. Follow the thread, station to station."
         />
 
         <div className="tl-flow">

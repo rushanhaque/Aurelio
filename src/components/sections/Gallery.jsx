@@ -6,7 +6,7 @@
    ±5° in 3-D under the cursor.
    ============================================================ */
 import { useRef } from 'react'
-import { gsap, useGSAP, prefersReducedMotion } from '../../lib/gsap'
+import { gsap, ScrollTrigger, useGSAP, prefersReducedMotion } from '../../lib/gsap'
 import { navigate } from '../../lib/router'
 import SectionHeader from '../ui/SectionHeader'
 import Reveal from '../ui/Reveal'
@@ -62,7 +62,53 @@ export default function Gallery() {
     () => {
       if (prefersReducedMotion) return
 
-      // Curtain reveal — each figure wipes up into view on entry
+      // Phones have no hover, so the "lamp lights" crossfade never fires and
+      // the curtain wipe can jank on a long single column. On <=640px we run a
+      // lighter language instead: a staggered fade/rise per item, plus a
+      // self-lighting reveal — each piece crossfades to its lit frame as it
+      // settles into the centre of the viewport (the desktop hover payoff).
+      const isPhone = window.matchMedia('(max-width: 640px)').matches
+
+      if (isPhone) {
+        // Mirror the house <Reveal> idiom exactly (set + to, with an
+        // already-visible immediate-play guard) so an entrance can never be
+        // stranded at opacity 0. Lazy-loaded figures shift the layout as their
+        // images arrive, so we also refresh ScrollTrigger on each image load.
+        gsap.utils.toArray('.gal-item', ref.current).forEach((item) => {
+          gsap.set(item, { opacity: 0, y: 34, scale: 0.985 })
+          const alreadyVisible = item.getBoundingClientRect().top < window.innerHeight
+          gsap.to(item, {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.95,
+            ease: 'power3.out',
+            ...(alreadyVisible
+              ? {}
+              : { scrollTrigger: { trigger: item, start: 'top bottom', once: true } }),
+          })
+
+          // self-lighting: light the piece while it sits in the live band, dim
+          // it as it leaves — the phone equivalent of the desktop hover payoff.
+          ScrollTrigger.create({
+            trigger: item,
+            start: 'top 80%',
+            end: 'bottom 34%',
+            onToggle: (self) => item.classList.toggle('is-lit', self.isActive),
+          })
+        })
+
+        // recompute trigger positions as lazy images settle the layout
+        gsap.utils.toArray('.gal-img', ref.current).forEach((img) => {
+          if (!img.complete) {
+            img.addEventListener('load', () => ScrollTrigger.refresh(), { once: true })
+          }
+        })
+
+        return
+      }
+
+      // Curtain reveal — each figure wipes up into view on entry (desktop)
       gsap.utils.toArray('.gal-fig', ref.current).forEach((fig) => {
         gsap.fromTo(
           fig,

@@ -99,6 +99,79 @@ export default function Atelier() {
     { scope: ref }
   )
 
+  // ----------------------------------------------------------------
+  // MOBILE / TABLET motion (<=900px): the pinned horizontal mechanic
+  // is off, so each stacked stage gets its own tasteful one-shot
+  // scroll-reveal — copy slides up, the media unveils with a gentle
+  // scale + clip, and a brass rule draws in under the title. Transform
+  // + opacity only (60fps). Reduced-motion is honoured by snapping to
+  // the resting state with no animation.
+  // ----------------------------------------------------------------
+  useGSAP(
+    () => {
+      const root = ref.current
+      if (!root) return
+
+      const mm = gsap.matchMedia()
+
+      mm.add('(max-width: 900px)', () => {
+        const panels = gsap.utils.toArray('.atl-panel', root)
+
+        panels.forEach((panel) => {
+          const media = panel.querySelector('.atl-panel-media')
+          const copy = panel.querySelector('.atl-panel-copy')
+          const rule = panel.querySelector('.atl-stage-rule')
+
+          // Reduced motion: place everything at rest, no tweening.
+          if (prefersReducedMotion) {
+            gsap.set([media, copy], { clearProps: 'all' })
+            if (rule) gsap.set(rule, { scaleX: 1, opacity: 1 })
+            return
+          }
+
+          const tl = gsap.timeline({
+            scrollTrigger: { trigger: panel, start: 'top 82%', once: true },
+            defaults: { ease: EASE },
+          })
+
+          if (media) {
+            tl.fromTo(
+              media,
+              { autoAlpha: 0, yPercent: 7, scale: 1.06, clipPath: 'inset(8% 0% 8% 0%)' },
+              {
+                autoAlpha: 1,
+                yPercent: 0,
+                scale: 1,
+                clipPath: 'inset(0% 0% 0% 0%)',
+                duration: 1.15,
+              },
+              0
+            )
+          }
+          if (copy) {
+            tl.fromTo(
+              copy,
+              { autoAlpha: 0, y: 26 },
+              { autoAlpha: 1, y: 0, duration: 0.9 },
+              0.12
+            )
+          }
+          if (rule) {
+            tl.fromTo(
+              rule,
+              { scaleX: 0, opacity: 0 },
+              { scaleX: 1, opacity: 1, duration: 0.7, ease: 'power2.out' },
+              0.5
+            )
+          }
+        })
+      })
+
+      return () => mm.revert()
+    },
+    { scope: ref }
+  )
+
   return (
     <section ref={ref} id="atelier" className="atl">
       <div ref={pinRef} className="atl-pin">
@@ -123,6 +196,7 @@ export default function Atelier() {
                       <span className="atl-num-rule" />
                     </div>
                     <BlurText className="h2 atl-stage-title" text={s.title} animateBy="words" direction="top" delay={80} stepDuration={0.32} />
+                    <span className="atl-stage-rule" aria-hidden="true" />
                     <BlurText className="atl-stage-body" text={s.body} animateBy="words" direction="top" delay={16} stepDuration={0.3} />
                     <span className="atl-stage-mark caption">
                       Stage {s.n}

@@ -4,16 +4,27 @@
   padding-block: 1.15rem;
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
+  /* gentle entrance: the strip settles in once, then scrolls */
+  animation: mrqReveal 1s var(--ease-silk, ease) both;
 }
 
 .mrq-track {
   display: flex;
   width: max-content;
+  /* hint the compositor so the long marquee stays buttery on phones */
+  will-change: transform;
   animation: mrqScroll 88s linear infinite;
 }
 
-/* slow to a stop so the eye can read a term */
-.mrq:hover .mrq-track { animation-play-state: paused; }
+/* slow to a stop so the eye can read a term (desktop pointers only) */
+@media (hover: hover) and (pointer: fine) {
+  .mrq:hover .mrq-track { animation-play-state: paused; }
+}
+
+@keyframes mrqReveal {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
 
 .mrq-list {
   display: flex;
@@ -50,6 +61,51 @@
   to   { transform: translateX(-50%); }
 }
 
+/* ---- Tablet ---- */
+@media (max-width: 900px) {
+  .mrq { padding-block: 1rem; }
+
+  .mrq-item {
+    gap: 0.7rem;
+    padding-inline: 1.15rem;
+    letter-spacing: 0.18em;
+  }
+
+  /* shorter loop on smaller screens keeps the per-pixel pace consistent */
+  .mrq-track { animation-duration: 64s; }
+}
+
+/* ---- Phone ---- */
+@media (max-width: 640px) {
+  .mrq { padding-block: 0.85rem; }
+
+  .mrq-item {
+    gap: 0.6rem;
+    padding-inline: 0.95rem;
+    font-size: 0.78rem;
+    letter-spacing: 0.16em;
+  }
+
+  .mrq-dot { font-size: 0.45rem; }
+
+  .mrq-track { animation-duration: 46s; }
+}
+
+/* ---- Small phone ---- */
+@media (max-width: 400px) {
+  .mrq { padding-block: 0.75rem; }
+
+  .mrq-item {
+    gap: 0.5rem;
+    padding-inline: 0.8rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+  }
+
+  .mrq-track { animation-duration: 38s; }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .mrq { animation: none; }
   .mrq-track { animation: none; }
 }

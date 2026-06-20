@@ -77,12 +77,18 @@ export default function Navbar() {
     nav.classList.remove('nav--hidden')
   }, [path])
 
-  // Escape closes the full-screen menu while it is open.
+  // Escape closes the full-screen menu while it is open; lock the page
+  // behind it so the body never scrolls under the emerald sheet (mobile).
   useEffect(() => {
     if (!open) return
     const onKey = (e) => { if (e.key === 'Escape') setOpen(false) }
     document.addEventListener('keydown', onKey)
-    return () => document.removeEventListener('keydown', onKey)
+    const prev = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.removeEventListener('keydown', onKey)
+      document.body.style.overflow = prev
+    }
   }, [open])
 
   // Animate the full-screen menu

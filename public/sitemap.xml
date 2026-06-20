@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://aurelio.example/</loc><priority>1.0</priority></url>
-  <url><loc>https://aurelio.example/collections</loc><priority>0.9</priority></url>
-  <url><loc>https://aurelio.example/collections/urns</loc><priority>0.7</priority></url>
-  <url><loc>https://aurelio.example/collections/lighting</loc><priority>0.7</priority></url>
-  <url><loc>https://aurelio.example/collections/furniture</loc><priority>0.7</priority></url>
-  <url><loc>https://aurelio.example/collections/kitchenware</loc><priority>0.7</priority></url>
-  <url><loc>https://aurelio.example/collections/decor</loc><priority>0.7</priority></url>
-  <url><loc>https://aurelio.example/collections/accessories</loc><priority>0.7</priority></url>
-  <url><loc>https://aurelio.example/materials</loc><priority>0.8</priority></url>
-  <url><loc>https://aurelio.example/care</loc><priority>0.6</priority></url>
-  <url><loc>https://aurelio.example/about</loc><priority>0.8</priority></url>
-  <url><loc>https://aurelio.example/contact</loc><priority>0.9</priority></url>
-  <url><loc>https://aurelio.example/faq</loc><priority>0.3</priority></url>
-  <url><loc>https://aurelio.example/terms</loc><priority>0.3</priority></url>
+  <url><loc>https://aurelio.in/</loc><priority>1.0</priority></url>
+  <url><loc>https://aurelio.in/collections</loc><priority>0.9</priority></url>
+  <url><loc>https://aurelio.in/collections/urns</loc><priority>0.7</priority></url>
+  <url><loc>https://aurelio.in/collections/lighting</loc><priority>0.7</priority></url>
+  <url><loc>https://aurelio.in/collections/furniture</loc><priority>0.7</priority></url>
+  <url><loc>https://aurelio.in/collections/kitchenware</loc><priority>0.7</priority></url>
+  <url><loc>https://aurelio.in/collections/decor</loc><priority>0.7</priority></url>
+  <url><loc>https://aurelio.in/collections/accessories</loc><priority>0.7</priority></url>
+  <url><loc>https://aurelio.in/materials</loc><priority>0.8</priority></url>
+  <url><loc>https://aurelio.in/care</loc><priority>0.6</priority></url>
+  <url><loc>https://aurelio.in/about</loc><priority>0.8</priority></url>
+  <url><loc>https://aurelio.in/contact</loc><priority>0.9</priority></url>
+  <url><loc>https://aurelio.in/faq</loc><priority>0.3</priority></url>
+  <url><loc>https://aurelio.in/terms</loc><priority>0.3</priority></url>
 </urlset>

@@ -22,6 +22,14 @@
   pointer-events: none;
   user-select: none;
   z-index: 0;
+  /* gentle one-shot drift-in — transform/opacity only, 60fps */
+  animation: manNumIn 1.4s var(--ease-silk) both;
+  will-change: transform, opacity;
+}
+
+@keyframes manNumIn {
+  from { opacity: 0; transform: translateY(2.4rem); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 .man-inner {
@@ -80,6 +88,7 @@
 
 .man-support {
   max-width: 46ch;
+  min-width: 0;   /* grid child: never force the track wider than its track */
 }
 
 .man-aside {
@@ -87,6 +96,7 @@
   flex-direction: column;
   align-items: flex-start;
   gap: clamp(1.8rem, 3vw, 2.6rem);
+  min-width: 0;
 }
 
 /* credo — stacked, each with a brass tick */
@@ -118,9 +128,93 @@
 /* ============================================================
    RESPONSIVE
    ============================================================ */
-@media (max-width: 760px) {
+
+/* Tablet — ease the statement and tighten the foot rhythm. */
+@media (max-width: 900px) {
+  .man-statement {
+    margin-bottom: clamp(2.8rem, 6vw, 4.4rem);
+  }
   .man-foot {
     grid-template-columns: 1fr;
-    gap: clamp(2rem, 6vw, 2.6rem);
+    gap: clamp(2rem, 6vw, 2.8rem);
+    padding-top: clamp(2rem, 4vw, 3rem);
+  }
+  /* prose can breathe full-width once the aside drops below it */
+  .man-support { max-width: 56ch; }
+}
+
+/* Phone — single column, full air, calmer numeral, slightly
+   softer tracking so the big serif never feels cramped. */
+@media (max-width: 640px) {
+  .man-inner .sh { margin-bottom: clamp(1.8rem, 7vw, 2.6rem); }
+
+  .man-statement {
+    margin-bottom: clamp(2.2rem, 8vw, 3.2rem);
+  }
+
+  .man-line--1 {
+    letter-spacing: -0.01em;
+    line-height: 1.06;
+  }
+  .man-line--2 {
+    letter-spacing: -0.012em;
+    line-height: 1.05;
+    margin-top: 0.1em;
+  }
+
+  .man-foot {
+    gap: clamp(1.6rem, 6vw, 2.2rem);
+    padding-top: clamp(1.6rem, 6vw, 2.4rem);
+  }
+  .man-support { max-width: none; }
+
+  .man-aside { gap: 1.6rem; }
+  .man-credo { gap: 1.05rem; }
+  /* expand the credo hit area for touch without changing the look */
+  .man-credo-item {
+    padding-block: 0.35rem;
+    padding-left: 1.5rem;
+  }
+  .man-credo-item::before {
+    top: calc(0.5em + 0.35rem);
+    /* sliding-underline draw-in — scaleX only, staggered per item */
+    transform-origin: left center;
+    animation: manTickDraw 0.9s var(--ease-silk) both;
+  }
+  .man-credo-item:nth-child(1)::before { animation-delay: 0.05s; }
+  .man-credo-item:nth-child(2)::before { animation-delay: 0.17s; }
+  .man-credo-item:nth-child(3)::before { animation-delay: 0.29s; }
+
+  /* Keep the folio numeral inside the viewport — pin it to the
+     right gutter and cap its size so it never forces a scroll. */
+  .man-bg-num {
+    font-size: clamp(11rem, 44vw, 17rem);
+    right: 0;
+    bottom: -0.1em;
+    max-width: 100%;
+    overflow: hidden;
+  }
+}
+
+@keyframes manTickDraw {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+/* Small phone — tighten the numeral and statement a touch more. */
+@media (max-width: 400px) {
+  .man-bg-num { font-size: clamp(9rem, 46vw, 12rem); }
+  .man-line--1 { letter-spacing: -0.006em; }
+  .man-line--2 { letter-spacing: -0.008em; }
+  .man-credo-item { letter-spacing: 0.2em; }
+}
+
+/* Honour the global reduced-motion kill-switch — the numeral
+   should simply be present, not drift in. */
+@media (prefers-reduced-motion: reduce) {
+  .man-bg-num {
+    animation: none;
+    opacity: 1;
+    transform: none;
   }
 }

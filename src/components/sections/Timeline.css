@@ -33,6 +33,30 @@
   letter-spacing: 0.05em;
 }
 
-@media (max-width: 700px) {
-  .tl-flow { height: clamp(24rem, 68vh, 34rem); }
+/* ============================================================
+   MOBILE
+   Below the tablet breakpoint <FlowingMenu> swaps its hover
+   marquee for a stacked, tappable stage list (see FlowingMenu.css).
+   That list is natural-height, so the fixed-height marquee shell
+   must release its clamp and just hug its content. We keep the
+   full-bleed hairline frame for the editorial feel.
+   ============================================================ */
+@media (max-width: 900px) {
+  .tl-container > .sh {
+    margin-bottom: clamp(1.8rem, 6vw, 2.6rem);
+  }
+
+  .tl-flow {
+    height: auto;          /* let the stage list size itself */
+    overflow: visible;     /* nothing to clip now; avoid edge cuts */
+  }
+}
+
+/* phone — trim the section's vertical air so it stays breathable
+   without the desktop's tall empty margins */
+@media (max-width: 640px) {
+  .tl {
+    padding-top: clamp(3rem, 11vw, 4.5rem);
+    padding-bottom: clamp(3rem, 11vw, 4.5rem);
+  }
 }

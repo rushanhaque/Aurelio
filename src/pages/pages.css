@@ -22,6 +22,11 @@
 .crumbs-link:hover { color: var(--fg); }
 .crumbs-current { color: var(--brass-soft); }
 .crumbs-sep { color: var(--fg-faint); opacity: 0.5; margin-left: 0.5rem; }
+/* tighten the crumb trail on phones so a long path never forces an overflow */
+@media (max-width: 640px) {
+  .crumbs { gap: 0.35rem; font-size: 0.66rem; letter-spacing: 0.14em; }
+  .crumbs-sep { margin-left: 0.35rem; }
+}
 
 /* ============================================================
    PAGE HERO
@@ -72,6 +77,17 @@
 }
 .pagehero-meta-value {
   font-family: var(--serif); font-size: 1.15rem; color: var(--ivory); letter-spacing: -0.005em;
+}
+
+/* ---- page hero, phone ---- */
+@media (max-width: 640px) {
+  .pagehero { padding-bottom: clamp(1.6rem, 6vw, 2.4rem); }
+  .pagehero-inner, .pagehero--center .pagehero-inner { max-width: 100%; }
+  /* tighten the big serif heading so it never crowds the viewport edge */
+  .pagehero-title { letter-spacing: -0.012em; }
+  .pagehero-lead { max-width: 100%; }
+  .pagehero-meta { gap: 1.1rem 1.8rem; }
+  .pagehero-meta-item { min-width: 0; }
 }
 
 /* ============================================================
@@ -151,6 +167,26 @@
 
 /* ---- touch / no-hover — inline image cards, no cursor preview ---- */
 @media (hover: none), (pointer: coarse) {
+  .coll-pv { display: none; }
+  .coll-index.is-ready:hover .coll-row { opacity: 1; }
+  .coll-row-link {
+    grid-template-columns: 1fr;
+    row-gap: 0.6rem;
+    column-gap: 0;
+    padding-block: clamp(1.8rem, 6vw, 2.6rem);
+  }
+  .coll-row-name { white-space: normal; line-height: 1.02; }
+  .coll-row:hover .coll-row-name { transform: none; }
+  .coll-row-summary { display: block; font-family: var(--sans); font-size: 0.9rem; line-height: 1.6; color: var(--ink-soft); max-width: 46ch; }
+  .coll-row-media { display: block; margin-bottom: 0.6rem; }
+  .coll-row-count { margin-top: 0.2rem; }
+  .coll-row-arrow { opacity: 1; transform: none; margin-top: 0.6rem; }
+}
+
+/* width-based fallback — any narrow viewport (even a hover-capable one) gets
+   the stacked image-card layout, so the desktop 4-column row never cramps or
+   bleeds past the gutter on small screens */
+@media (max-width: 760px) {
   .coll-pv { display: none; }
   .coll-index.is-ready:hover .coll-row { opacity: 1; }
   .coll-row-link {
@@ -938,4 +974,176 @@
 }
 @media (max-width: 560px) {
   .care-grid { grid-template-columns: 1fr; }
+}
+
+/* ============================================================
+   MOBILE POLISH  —  phone-first stacking, tap ergonomics,
+   and tasteful one-shot motion. Layered on top of the
+   functional breakpoints above; only touches small screens
+   so desktop (>900px) is untouched. Motion is transform +
+   opacity only and degrades under prefers-reduced-motion via
+   the global kill-switch in index.css.
+   ============================================================ */
+
+/* ---- touch affordances: give hover-only delight a default state ---- */
+@media (hover: none), (pointer: coarse) {
+  /* product cards: the name-colour + lift are hover-only on desktop;
+     on touch keep the name fully legible (the soft zoom-in is handled
+     by the one-shot settle animation in the phone-motion block below) */
+  .prod-card-name { color: var(--ink); }
+
+  /* collection-detail "add to cart" + card link stay comfortably tappable */
+  .prod-card-top { gap: 0.8rem; }
+
+  /* showroom + contact links: full-width tap rows, generous height */
+  .show-contact a, .contact-lines a, .contact-social a { padding-block: 0.15rem; }
+}
+
+/* ============================================================
+   TABLET  —  ≤900px
+   ============================================================ */
+@media (max-width: 900px) {
+  .contact-grid { grid-template-columns: 1fr; gap: clamp(1.6rem, 4vw, 2.4rem); }
+  .contact-write { grid-template-columns: 1fr; gap: clamp(1.8rem, 5vw, 2.6rem); }
+  .contact-map, .contact-form-col { order: 0; }
+  .cf-row { grid-template-columns: 1fr; }
+}
+
+/* ============================================================
+   PHONE  —  ≤640px : single column, full-bleed media,
+   bigger tap targets, premium-but-tighter spacing.
+   ============================================================ */
+@media (max-width: 640px) {
+  /* nothing may bleed past the viewport edge */
+  .prod-grid,
+  .mat-row,
+  .pd-layout,
+  .care-grid,
+  .contact-grid,
+  .contact-write,
+  .comm-options,
+  .comm-extra-grid,
+  .comm-assure,
+  .pillars,
+  .about-stats,
+  .about-lead,
+  .show-row {
+    grid-template-columns: 1fr;
+  }
+  .prod-card,
+  .pd-info,
+  .pd-media,
+  .mat-fig,
+  .mat-body,
+  .contact-card,
+  .care-card,
+  .show-fig,
+  .comm-option { min-width: 0; }
+
+  /* ---- collections index: roomy, clearly tappable rows ---- */
+  .coll-row-link { padding-block: clamp(1.6rem, 6vw, 2.2rem); }
+  .coll-row-name { letter-spacing: -0.012em; }
+
+  /* ---- product grid: one strong column, media full-width ---- */
+  .prod-grid { gap: clamp(1.8rem, 6vw, 2.4rem); }
+  .prod-card-body { margin-top: 0.9rem; }
+  /* keep the inline add-to-cart on its own comfortable line */
+  .prod-card-top { flex-wrap: wrap; gap: 0.6rem 1rem; }
+
+  /* ---- product detail: stack, image first, info breathes ---- */
+  .section.pd { padding-block: calc(var(--nav-clear) + 1rem) clamp(2rem, 8vw, 3rem); }
+  .pd-layout { gap: clamp(1.6rem, 6vw, 2.2rem); }
+  .pd-media { aspect-ratio: 4 / 5; box-shadow: var(--shadow-card); }
+  .pd-actions { gap: 0.7rem; }
+  .pd-actions > * { flex: 1 1 auto; min-width: 0; }
+  .pd-spec { gap: 0.5rem 1.2rem; }
+
+  /* ---- materials: stacked rows, tile full-width above its text ---- */
+  .mat-list { gap: clamp(2.2rem, 8vw, 3rem); }
+  .mat-row, .mat-row:nth-child(even) { grid-template-columns: 1fr; gap: clamp(1.4rem, 5vw, 2rem); }
+  .mat-row:nth-child(even) .mat-fig { order: 0; }
+  .mat-tile, .mat-row:nth-child(even) .mat-tile { width: 100%; margin-left: 0; }
+
+  /* ---- care guide: single column, generous step spacing ---- */
+  .care-grid { gap: clamp(1.4rem, 5vw, 2rem); margin-top: clamp(2rem, 7vw, 2.8rem); }
+  .care-card { padding: clamp(1.4rem, 5vw, 1.8rem); }
+
+  /* ---- contact: form + map stack, map full-width and tall ---- */
+  .contact-foot { flex-direction: column; align-items: flex-start; gap: 1.2rem; }
+  .contact-write { padding-top: clamp(1.8rem, 6vw, 2.4rem); }
+  .cf-row { grid-template-columns: 1fr; }
+  .contact-map { min-height: clamp(17rem, 52vw, 22rem); width: 100%; }
+  /* expand the form-submit + helper into easy thumb targets */
+  .cf-actions { gap: 0.9rem 1.2rem; }
+  .cf-actions > * { min-height: 44px; display: inline-flex; align-items: center; }
+  .contact-lines > div { grid-template-columns: 5.5rem 1fr; gap: 0.8rem; }
+
+  /* ---- commission flow: full-width options + nav ---- */
+  .comm-options { gap: 0.8rem; }
+  .comm-option { padding: clamp(1.1rem, 4vw, 1.4rem); }
+  .comm-assure { gap: 1.2rem; }
+  .comm-process-step { gap: clamp(0.9rem, 4vw, 1.4rem); }
+
+  /* ---- showrooms / about / lookbook spacing trims ---- */
+  .show-list { gap: clamp(2rem, 7vw, 2.6rem); }
+  .show-contact { gap: 0.4rem 1.2rem; }
+  .about-lead { gap: 1.2rem; }
+  .pillars, .about-stats { gap: 1.4rem; }
+  .look-grid { row-gap: clamp(2rem, 8vw, 2.8rem); }
+
+  /* ---- legal + 404 ---- */
+  .legal-prose, .legal-prose p { max-width: 100%; }
+  .nf { min-height: 70vh; padding-block: clamp(3rem, 12vw, 5rem); }
+
+  /* ---- map pill: keep it a comfortable, non-overflowing tap target ---- */
+  .contact-map-link { bottom: 0.7rem; right: 0.7rem; padding: 0.6rem 0.9rem; }
+}
+
+/* ============================================================
+   SMALL PHONE  —  ≤400px : final tightening, no overflow.
+   ============================================================ */
+@media (max-width: 400px) {
+  .coll-row-name { font-size: clamp(1.4rem, 8vw, 1.9rem); }
+  .pd-spec { grid-template-columns: 1fr; gap: 0.2rem 0; }
+  .pd-spec dt { margin-top: 0.6rem; }
+  .pd-spec dt:first-child { margin-top: 0; }
+  /* commission summary rows can crowd at the smallest width — let them wrap */
+  .comm-summary-row { flex-wrap: wrap; gap: 0.2rem 1rem; }
+  .contact-lines > div { grid-template-columns: 1fr; gap: 0.15rem; }
+  .contact-lines dt { letter-spacing: 0.16em; }
+  .cf-actions { flex-direction: column; align-items: stretch; }
+  .cf-actions > * { width: 100%; justify-content: center; }
+  .pd-actions { flex-direction: column; }
+  .pd-actions > * { width: 100%; }
+}
+
+/* ============================================================
+   PHONE MOTION  —  tasteful, one-shot, GPU-only. Complements
+   the GSAP scroll-reveals already firing on these pages: a
+   soft image settle-in and a sliding underline on key links.
+   All of it is killed by prefers-reduced-motion (index.css).
+   ============================================================ */
+@media (max-width: 900px) {
+  /* image settle: figures ease from a hair of scale to rest as the
+     card's GSAP fade brings it in — reads as a gentle zoom-to-focus */
+  .prod-card-fig img,
+  .look-fig img { animation: pageMediaSettle 1.1s var(--ease-silk) both; }
+
+  /* sliding underline under tappable serif links (contact/showroom/social) */
+  .contact-social a,
+  .comm-extra-contact a {
+    position: relative;
+    background-image: linear-gradient(var(--brass), var(--brass));
+    background-repeat: no-repeat;
+    background-position: 0 100%;
+    background-size: 0% 1px;
+    transition: background-size 0.5s var(--ease-silk), color var(--t) var(--ease-silk);
+  }
+  .contact-social a:active,
+  .comm-extra-contact a:active { background-size: 100% 1px; color: var(--brass); }
+}
+
+@keyframes pageMediaSettle {
+  from { transform: scale(1.05); opacity: 0.55; }
+  to   { transform: scale(1);    opacity: 1; }
 }

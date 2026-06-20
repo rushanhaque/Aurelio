@@ -24,9 +24,24 @@ const formatInt = (n) => Math.round(n).toLocaleString('en-US')
 export default function Heritage() {
   const ref      = useRef(null)
   const statsRef = useRef(null)
+  const mediaRef = useRef(null)
 
   useGSAP(
     () => {
+      // Gentle one-shot film reveal — fade + a slow settle of the scaled
+      // video so the section "arrives" softly. Transform/opacity only, so
+      // it stays at 60fps on phones; the global kill-switch handles RM.
+      const media = mediaRef.current
+      if (media && !prefersReducedMotion) {
+        gsap.from(media, {
+          opacity: 0,
+          scale: 1.08,
+          duration: 1.6,
+          ease: 'power2.out',
+          scrollTrigger: { trigger: ref.current, start: 'top 92%', once: true },
+        })
+      }
+
       // Invert the transparent header to white text while this dark video
       // section sits beneath it (it reverts to emerald on hover, when the
       // bar itself turns white).
@@ -92,7 +107,7 @@ export default function Heritage() {
   return (
     <section ref={ref} id="heritage" className="her">
 
-      <div className="her-media" aria-hidden="true">
+      <div className="her-media" ref={mediaRef} aria-hidden="true">
         <video
           className="her-video"
           src={heritageBg}

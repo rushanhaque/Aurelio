@@ -412,3 +412,34 @@ ul { list-style: none; }
     scroll-behavior: auto !important;
   }
 }
+
+/* ============================================================
+   GLOBAL MOBILE FOUNDATION
+   Phone-first safety + touch ergonomics. Component stylesheets
+   layer their own responsive rules on top of this.
+   ============================================================ */
+html {
+  -webkit-text-size-adjust: 100%;   /* iOS: don't inflate type on rotate */
+  text-size-adjust: 100%;
+}
+/* clean, app-like taps — no grey flash on touch */
+a, button, [role="button"], input, select, textarea, label, summary {
+  -webkit-tap-highlight-color: transparent;
+}
+/* never let a stray wide element cause a horizontal scrollbar */
+html, body { max-width: 100%; }
+
+@media (max-width: 640px) {
+  /* comfortable touch targets for primary controls */
+  .btn, .nav-cart, .nav-burger, .ft-send, .drawer-send, .cf-input, .cf-textarea,
+  .ft-input, button[type="submit"] {
+    min-height: 44px;
+  }
+  /* a touch tighter vertical rhythm on phones, still breathable */
+  :root { --space-section: clamp(3.6rem, 2.4rem + 7vw, 5.2rem); }
+}
+
+/* coarse pointer (touch): retire hover-only flourishes that can stick */
+@media (hover: none) {
+  * { cursor: auto !important; }
+}

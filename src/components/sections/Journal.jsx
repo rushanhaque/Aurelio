@@ -5,7 +5,7 @@
    plate, cross-fading every couple of seconds).
    ============================================================ */
 import { useRef, useState } from 'react'
-import { gsap, useGSAP, prefersReducedMotion } from '../../lib/gsap'
+import { gsap, ScrollTrigger, useGSAP, prefersReducedMotion } from '../../lib/gsap'
 import SectionHeader from '../ui/SectionHeader'
 import SplitText from '../ui/SplitText'
 import Reveal from '../ui/Reveal'
@@ -62,6 +62,7 @@ function ReviewPlate({ review, index }) {
 
 export default function Journal() {
   const ref = useRef(null)
+  const showcase = useRef(null)
   const timer = useRef(null)
   const [active, setActive] = useState(0)
 
@@ -86,6 +87,31 @@ export default function Journal() {
       }
     },
     { dependencies: [active], scope: ref }
+  )
+
+  // Mobile-only scroll reveal: add `is-revealed` to the showcase as it
+  // enters view so the staggered rise (CSS) is tied to scroll, not load.
+  // Lighter than a scrub; degrades cleanly under reduced motion.
+  useGSAP(
+    () => {
+      const el = showcase.current
+      if (!el) return
+      const mm = gsap.matchMedia()
+      mm.add('(max-width: 640px) and (prefers-reduced-motion: no-preference)', () => {
+        const st = ScrollTrigger.create({
+          trigger: el,
+          start: 'top 82%',
+          once: true,
+          onEnter: () => el.classList.add('is-revealed'),
+        })
+        // already in view on mount → reveal immediately
+        if (el.getBoundingClientRect().top < window.innerHeight * 0.9) {
+          el.classList.add('is-revealed')
+        }
+        return () => st.kill()
+      })
+    },
+    { scope: ref }
   )
 
   return (
@@ -119,7 +145,7 @@ export default function Journal() {
         </figure>
 
         {/* AUTO-ROTATING CLIENT TESTIMONIAL SHOWCASE */}
-        <div className="rev">
+        <div className="rev" ref={showcase}>
           <div className="rev-plate-col">
             <div className="rev-plates">
               {REVIEWS.map((rev, i) => (

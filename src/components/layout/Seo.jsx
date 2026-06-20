@@ -7,7 +7,7 @@
 import { useEffect } from 'react'
 
 const SITE = 'Aurelio — Metal & Wood Atelier by AF International'
-const ORIGIN = 'https://aurelio.example' // ← set to the production domain
+const ORIGIN = 'https://aurelio.in' // ← set to the production domain
 
 function setMeta(attr, key, content) {
   if (!content) return

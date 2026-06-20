@@ -252,13 +252,18 @@
   display: none;
   background: #07251B;
   clip-path: inset(0 0 100% 0);
+  /* track the dynamic viewport so the URL bar can't crop the menu on phones */
+  height: 100vh;
+  height: 100dvh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .navm-inner {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  height: 100%;
+  min-height: 100%;
   padding-block: clamp(5rem, 10vh, 7rem);
   gap: clamp(1.6rem, 3.5vh, 2.8rem);
 }
@@ -337,10 +342,128 @@
 /* ============================================================
    RESPONSIVE
    ============================================================ */
+
+/* --- Tablet: collapse the inline links into the burger + menu --- */
 @media (max-width: 1020px) {
   .nav-links { display: none; }
   .nav-burger { display: flex; align-items: center; justify-content: center; }
   .nav-logo-name { font-size: 1.34rem; }
   .nav-logo-sub { font-size: 0.46rem; }
+}
+
+@media (max-width: 900px) {
+  /* With the links gone the side cells only hold the burger / cart, so the
+     centre column can breathe. Tighten the bar gap a touch. */
+  .nav-inner { gap: clamp(0.9rem, 3vw, 2rem); }
+}
+
+/* --- Phone: comfortable bar, generous tap targets --- */
+@media (max-width: 640px) {
+  .nav-inner {
+    padding-block: 0.7rem;
+    gap: 0.75rem;
+  }
+  .nav--scrolled .nav-inner { padding-block: 0.55rem; }
+
+  /* The mark stays centred but trims its tracking so it never crowds the
+     burger or the cart on a narrow viewport. */
+  .nav-logo-name {
+    font-size: 1.24rem;
+    letter-spacing: 0.34em;
+    margin-right: -0.34em;
+  }
+  .nav--home:not(.nav--scrolled) .nav-logo-name { font-size: 1.4rem; }
+  .nav-logo-sub { font-size: 0.42rem; letter-spacing: 0; }
+  .nav-logo-rule { margin-block: 0.26rem 0.2rem; }
+
+  /* 44px round burger — a clearly tappable control. */
+  .nav-burger { width: 44px; height: 44px; }
+  .nav-burger span { width: 16px; }
+
+  /* Cart reads as a compact pill; keep it >=44px tall and tappable. */
+  .nav-cart {
+    min-height: 44px;
+    padding: 0.5rem 0.7rem;
+    gap: 0.4em;
+    border-radius: var(--radius-sm);
+  }
+  .nav-cart-label { font-size: 0.6rem; }
+}
+
+/* --- Small phone: protect against any horizontal bleed --- */
+@media (max-width: 400px) {
+  .nav-inner { gap: 0.55rem; }
+  .nav-logo-name { font-size: 1.1rem; letter-spacing: 0.3em; margin-right: -0.3em; }
+  .nav--home:not(.nav--scrolled) .nav-logo-name { font-size: 1.22rem; }
+  .nav-logo-sub { font-size: 0.38rem; }
+  .nav-cart { padding: 0.5rem 0.6rem; }
+}
+
+/* ============================================================
+   FULL-SCREEN MENU — mobile refinements
+   The GSAP clip-path reveal + staggered link rise stay intact;
+   here we tune spacing, tap targets and a phone-native tap state.
+   ============================================================ */
+@media (max-width: 900px) {
+  .navm-inner {
+    padding-block: clamp(4.5rem, 9vh, 6.5rem);
+    gap: clamp(1.4rem, 3vh, 2.4rem);
+  }
+}
+
+@media (max-width: 640px) {
+  .navm-inner {
+    /* clear the fixed bar at the top, then fill the rest evenly */
+    padding-block: 5.5rem clamp(1.6rem, 4vh, 2.4rem);
+    gap: clamp(1.2rem, 2.6vh, 2rem);
+    justify-content: flex-start;
+  }
+
+  .navm-brand { padding-bottom: 1.4rem; gap: 0.5rem; }
+  .navm-brand-name { font-size: clamp(1.4rem, 6vw, 1.8rem); letter-spacing: 0.42em; }
+  .navm-brand-sub { font-size: 0.5rem; letter-spacing: 0.28em; }
+
+  .navm-links { gap: 0.1rem; }
+
+  /* Big, finger-friendly rows. The hover slide is a desktop affordance —
+     on touch we give each link a pressed state instead, so taps feel alive. */
+  .navm-link {
+    font-size: clamp(2rem, 11vw, 2.9rem);
+    gap: 0.9rem;
+    padding-block: 0.55rem;
+    min-height: 44px;
+    align-items: center;
+    transition:
+      opacity   0.4s var(--ease-silk),
+      transform 0.4s var(--ease-out),
+      color     0.4s var(--ease-silk);
+  }
+  /* neutralise the desktop padding-left reveal on touch */
+  .navm-link:hover { padding-left: 0; opacity: 1; }
+  .navm-link:active {
+    transform: translateX(0.4rem);
+    opacity: 0.6;
+  }
+  .navm-index { font-size: 0.62rem; }
+
+  .navm-foot {
+    gap: 0.35rem 0.8rem;
+    padding-top: 1.4rem;
+  }
+  .navm-foot-item { font-size: 0.68rem; }
+}
+
+@media (max-width: 400px) {
+  .navm-link { font-size: clamp(1.8rem, 12vw, 2.5rem); gap: 0.7rem; }
+  .navm-foot { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+  .navm-foot-dot { display: none; }
+}
+
+/* ============================================================
+   REDUCED MOTION — let the global kill-switch flatten transitions,
+   but make sure the touch press-state never lingers as a transform.
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  .navm-link:active { transform: none; }
 }
 

@@ -132,9 +132,87 @@
 
 /* ============================================================
    RESPONSIVE
+   The desktop look is untouched above; these layers only tune
+   small screens — graceful wrap of the kicker/index row, a
+   slightly tighter title, and a calmer hairline tab.
    ============================================================ */
-@media (max-width: 600px) {
-  .sh-top { gap: 1rem; flex-wrap: wrap; }
-  .sh-kicker { letter-spacing: 0.1em; }
-  .sh-title { max-width: none; }
+
+/* ---- tablet ---- */
+@media (max-width: 900px) {
+  .sh { margin-bottom: clamp(2.2rem, 5vw, 3.6rem); }
+  .sh-top { gap: 1.1rem; margin-bottom: clamp(1.4rem, 3vw, 2.2rem); }
+  .sh-body { margin-top: clamp(1.4rem, 3vw, 2.2rem); }
+}
+
+/* ---- phone ---- */
+@media (max-width: 640px) {
+  /* let the index drop below the label cleanly instead of crushing it */
+  .sh-top {
+    gap: 0.7rem 1rem;
+    flex-wrap: wrap;
+    align-items: flex-end;
+  }
+  .sh-label { flex: 1 1 100%; min-width: 0; }
+  .sh-index { flex: 0 0 auto; }
+
+  /* nudge the section label up a touch so it never feels cramped */
+  .sh-kicker {
+    letter-spacing: 0.1em;
+    font-size: clamp(1.15rem, 0.7rem + 3.4vw, 1.6rem);
+  }
+  .sh-mark { font-size: clamp(0.5rem, 0.3rem + 1.4vw, 0.72rem); }
+
+  /* title: relax the desktop max-width so lines aren't artificially short,
+     and ease the tracking so the serif never crowds itself on a phone */
+  .sh-title,
+  .sh-title.display { max-width: none; }
+  .sh .sh-title {
+    font-size: clamp(1.85rem, 1.2rem + 5.2vw, 2.9rem);
+    letter-spacing: -0.012em;
+  }
+
+  .sh-lead { max-width: none; margin-top: clamp(1.2rem, 4vw, 1.7rem); }
+
+  /* keep the emerald lead-in tab present but slightly trimmer */
+  .sh-rule::before { width: clamp(32px, 12vw, 56px); }
+
+  /* center variant: keep the row centered but allow the wrap */
+  .sh--center .sh-top { gap: 0.7rem 1.4rem; }
+}
+
+/* ---- small phone ---- */
+@media (max-width: 400px) {
+  .sh-kicker { letter-spacing: 0.085em; }
+  .sh .sh-title { font-size: clamp(1.7rem, 1rem + 6vw, 2.4rem); }
+  .sh-index { font-size: 0.74rem; }
+}
+
+/* ============================================================
+   MOBILE MOTION
+   A tasteful one-shot reveal for the title block + lead on phones.
+   GSAP already animates the kicker / index / rule via ScrollTrigger;
+   this CSS layer adds a gentle weighted slide-up so the body of the
+   header arrives with the same premium feel. Transform + opacity
+   only (60fps). Degrades through the global reduced-motion switch.
+   ============================================================ */
+@media (max-width: 640px) {
+  @keyframes sh-rise {
+    from { opacity: 0; transform: translate3d(0, 16px, 0); }
+    to   { opacity: 1; transform: translate3d(0, 0, 0); }
+  }
+
+  .sh-body {
+    animation: sh-rise 0.9s var(--ease-silk) both;
+    /* let GSAP's title split-reveal lead, then the surrounding block settles */
+    animation-delay: 0.12s;
+  }
+  .sh-lead {
+    animation: sh-rise 1s var(--ease-silk) both;
+    animation-delay: 0.26s;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sh-body,
+  .sh-lead { animation: none; }
 }

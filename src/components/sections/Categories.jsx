@@ -25,13 +25,35 @@ export default function Categories() {
   useGSAP(
     () => {
       if (prefersReducedMotion) return
-      gsap.from(ref.current.querySelectorAll('.cat-panel'), {
-        yPercent: 9,
-        opacity: 0,
-        duration: 1.05,
-        ease: EASE,
-        stagger: 0.085,
-        scrollTrigger: { trigger: ref.current.querySelector('.cat-panels'), start: 'top 80%', once: true },
+
+      const mm = gsap.matchMedia()
+
+      /* Desktop / tablet — the row glides up as one cinematic strip. */
+      mm.add('(min-width: 901px)', () => {
+        gsap.from(ref.current.querySelectorAll('.cat-panel'), {
+          yPercent: 9,
+          opacity: 0,
+          duration: 1.05,
+          ease: EASE,
+          stagger: 0.085,
+          scrollTrigger: { trigger: ref.current.querySelector('.cat-panels'), start: 'top 80%', once: true },
+        })
+      })
+
+      /* Phone / small tablet — each stacked card reveals on its own as it
+         enters the viewport: a gentle slide-up + fade with a slow image
+         zoom-settle. Transform + opacity only, so it stays at 60fps. */
+      mm.add('(max-width: 900px)', () => {
+        ref.current.querySelectorAll('.cat-panel').forEach((panel) => {
+          const media = panel.querySelector('.ph-img, .ph-fill')
+          const content = panel.querySelector('.cat-panel-content')
+          const tl = gsap.timeline({
+            scrollTrigger: { trigger: panel, start: 'top 88%', once: true },
+          })
+          tl.from(panel, { yPercent: 6, opacity: 0, duration: 0.9, ease: EASE })
+          if (media) tl.from(media, { scale: 1.12, duration: 1.2, ease: EASE }, 0)
+          if (content) tl.from(content, { y: 18, opacity: 0, duration: 0.8, ease: EASE }, 0.18)
+        })
       })
     },
     { scope: ref }

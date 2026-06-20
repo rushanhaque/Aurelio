@@ -17,6 +17,44 @@
 }
 .concierge-icon { display: grid; place-items: center; }
 
-@media (max-width: 600px) {
-  .concierge { width: 50px; height: 50px; }
+/* ============================================================
+   MOBILE — keep the disc clear of content and the home-bar,
+   well below the cart drawer (z 1300+), with a generous tap
+   target and a calm resting cue. Only small screens change.
+   ============================================================ */
+
+/* Phone — anchor to the safe area and add a slow, premium
+   breathing halo so the disc feels alive without being flashy. */
+@media (max-width: 640px) {
+  .concierge {
+    width: 56px;
+    height: 56px;
+    /* Sit above the home indicator and inside the right notch. */
+    right: calc(var(--gutter) + env(safe-area-inset-right, 0px));
+    bottom: calc(1.1rem + env(safe-area-inset-bottom, 0px));
+    /* A soft emerald halo that gently pulses at rest. */
+    animation: concierge-breathe 3.6s var(--ease-silk) 1.2s infinite;
+  }
+  /* Tactile press feedback for touch. */
+  .concierge:active { transform: scale(0.94); }
+}
+
+/* Small phone — trim slightly so it never crowds the layout. */
+@media (max-width: 400px) {
+  .concierge {
+    width: 52px;
+    height: 52px;
+    bottom: calc(0.9rem + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+/* Slow, weighted halo — opacity-driven shadow only, no layout. */
+@keyframes concierge-breathe {
+  0%, 100% { box-shadow: 0 10px 30px rgba(7, 37, 27, 0.28), 0 0 0 0 rgba(14, 59, 44, 0.22); }
+  50%      { box-shadow: 0 10px 30px rgba(7, 37, 27, 0.28), 0 0 0 10px rgba(14, 59, 44, 0); }
+}
+
+/* Honour reduced-motion: hold the disc perfectly still. */
+@media (prefers-reduced-motion: reduce) {
+  .concierge { animation: none; }
 }

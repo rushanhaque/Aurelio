@@ -189,9 +189,18 @@
   flex-shrink: 0;
 }
 
-@media (max-width: 620px) {
-  .ft-atelier { gap: 0.2rem 0; }
-  .ft-atelier-link { padding: 0.35rem 0.7rem; font-size: 0.68rem; letter-spacing: 0.08em; }
+@media (max-width: 640px) {
+  .ft-atelier {
+    gap: 0.15rem 0.1rem;
+    margin-top: clamp(1.1rem, 4vw, 1.6rem);
+    padding-top: clamp(1.1rem, 4vw, 1.6rem);
+  }
+  .ft-atelier-item { min-height: 44px; }
+  .ft-atelier-link {
+    padding: 0.55rem 0.7rem;
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+  }
   .ft-atelier-sep { display: none; }
 }
 
@@ -370,19 +379,102 @@
 /* ============================================================
    RESPONSIVE
    ============================================================ */
+
+/* ---- tablet: stack the columns block above the enquiry form ---- */
 @media (max-width: 900px) {
-  .ft-main { grid-template-columns: 1fr; gap: 2.4rem; }
+  .ft-main { grid-template-columns: 1fr; gap: clamp(2rem, 6vw, 2.6rem); }
+  /* a touch more room between the form fields once it spans full width */
+  .ft-form { gap: 1rem; max-width: 30rem; }
 }
 
-@media (max-width: 620px) {
-  .ft-cols { grid-template-columns: repeat(2, 1fr); gap: 1.8rem 1rem; }
+/* ---- phone: two-up link columns, full-width form, stacked legal bar ---- */
+@media (max-width: 640px) {
+  .ft {
+    padding-top: clamp(1.6rem, 7vw, 2.4rem);
+    padding-bottom: clamp(1.1rem, 4vw, 1.6rem);
+  }
+
+  /* min-width:0 lets grid children shrink instead of forcing overflow */
+  .ft-cols {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.6rem 1.2rem;
+  }
+  .ft-col { min-width: 0; }
+
+  /* slightly roomier tap targets for the link lists on touch */
+  .ft-list { gap: 0.2rem; }
+  .ft-link {
+    padding: 0.4rem 0;
+    font-size: 0.86rem;
+  }
+  /* hover slide is a desktop-only affordance — neutralise it on touch */
+  .ft-link:hover { transform: none; }
+  .ft-list--visit li { margin-bottom: 0.55rem; }
+  .ft-visit-addr { max-width: none; }
+
+  .ft-form { max-width: none; }
+  .ft-input { font-size: 16px; padding: 0.55rem 0; }  /* 16px avoids iOS focus zoom */
+  .ft-send {
+    min-height: 44px;
+    align-items: center;
+    margin-top: 0.6rem;
+  }
+
+  /* legal bar stacks, centred, with comfortable rhythm */
   .ft-bottom {
     grid-template-columns: 1fr;
     justify-items: center;
     text-align: center;
-    gap: 0.9rem;
+    gap: 1rem;
+    margin-top: clamp(1.4rem, 5vw, 2rem);
   }
   .ft-bottom .ft-copy,
   .ft-bottom .ft-dev,
   .ft-bottom .ft-clock { justify-self: center; }
+  .ft-copy { order: 1; }
+  .ft-dev  { order: 2; min-height: 40px; }
+  .ft-clock { order: 3; justify-content: center; }
+
+  /* the wordmark already scales via clamp; ease the tracking so the
+     letters never crowd the viewport edges on a narrow screen */
+  .ft-mark-word { letter-spacing: 0.3em; text-indent: 0.3em; }
+}
+
+/* ---- small phone: single column for the link lists ---- */
+@media (max-width: 400px) {
+  .ft-cols { grid-template-columns: minmax(0, 1fr); gap: 1.4rem; }
+  .ft-atelier-link { padding: 0.55rem 0.55rem; font-size: 0.66rem; letter-spacing: 0.06em; }
+  .ft-mark-word { letter-spacing: 0.24em; text-indent: 0.24em; }
+  .cat-modal { padding: clamp(1.6rem, 7vw, 2rem) clamp(1.2rem, 5vw, 1.6rem); }
+  .cat-modal-overlay { padding: 1rem; }
+}
+
+/* ============================================================
+   MOBILE MOTION — tasteful one-shot reveals for the parts not
+   already driven by <Reveal> (atelier nav + legal bar). Uses a
+   scroll-driven view-timeline so it fires once as each block
+   enters; transform + opacity only (60fps). Degrades to fully
+   visible where unsupported or when motion is reduced.
+   ============================================================ */
+@media (max-width: 900px) {
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .ft-atelier,
+      .ft-bottom {
+        animation: ftRiseIn both linear;
+        animation-timeline: view();
+        animation-range: entry 0% entry 60%;
+      }
+    }
+  }
+}
+
+@keyframes ftRiseIn {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ft-atelier,
+  .ft-bottom { animation: none; opacity: 1; transform: none; }
 }

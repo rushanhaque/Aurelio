@@ -21,6 +21,11 @@ export default function Hero() {
   useGSAP(
     () => {
       const q = gsap.utils.selector(ref)
+      // phones get a lighter, wrap-friendly entrance (the title wraps to
+      // several lines here, so the single tall mask-reveal is swapped for a
+      // soft staggered rise; scroll-scrub parallax + infinite breathing are
+      // dropped to keep things at 60fps).
+      const isPhone = typeof window !== 'undefined' && window.matchMedia('(max-width: 640px)').matches
 
       // the bar inverts (transparent, white type) while the film hero owns the screen
       const nav = document.querySelector('.nav')
@@ -37,13 +42,28 @@ export default function Hero() {
       const restore = () => { if (nav) nav.classList.remove('nav--invert'); if (stNav) stNav.kill() }
 
       if (prefersReducedMotion) {
-        gsap.set(q('.hero-line-inner'), { yPercent: 0 })
+        gsap.set(q('.hero-line-inner'), { yPercent: 0, y: 0, opacity: 1 })
         gsap.set(q('.hero-eyebrow, .hero-ctas'), { opacity: 1, y: 0 })
         gsap.set(q('.hero-eyebrow-rule'), { scaleX: 1 })
         return restore
       }
 
       const tl = gsap.timeline({ defaults: { ease: EASE } })
+
+      if (isPhone) {
+        // wrap-safe reveal: fade + gentle rise instead of a tall y-mask
+        tl.set(q('.hero-line-inner'), { yPercent: 0, y: 26, opacity: 0 })
+          .set(q('.hero-eyebrow, .hero-ctas'), { opacity: 0, y: 18 })
+          .set(q('.hero-eyebrow-rule'), { scaleX: 0 })
+
+          .to(q('.hero-eyebrow-rule'), { scaleX: 1, duration: 0.8, ease: EASE_LONG }, 0.3)
+          .to(q('.hero-eyebrow'), { opacity: 1, y: 0, duration: 0.7 }, 0.4)
+          .to(q('.hero-line-inner'), { y: 0, opacity: 1, duration: 1, ease: EASE_LONG }, 0.55)
+          .to(q('.hero-ctas'), { opacity: 1, y: 0, duration: 0.8 }, 1.05)
+
+        return restore
+      }
+
       tl.set(q('.hero-line-inner'), { yPercent: 118 })
         .set(q('.hero-eyebrow, .hero-ctas'), { opacity: 0, y: 22 })
         .set(q('.hero-eyebrow-rule'), { scaleX: 0 })

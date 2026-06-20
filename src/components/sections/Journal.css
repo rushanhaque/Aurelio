@@ -178,16 +178,29 @@
 .rev-bars { display: flex; gap: 0.5rem; margin-top: clamp(2rem, 4vw, 3rem); max-width: 24rem; }
 .rev-bar {
   flex: 1; height: 2px; background: var(--line-mid);
-  position: relative; overflow: hidden; cursor: pointer;
+  position: relative; cursor: pointer;
   border: 0; padding: 0; border-radius: 2px;
   transition: background var(--t) var(--ease-silk);
+  /* the visible track stays a hairline; the tap area is expanded
+     below via the ::before pseudo so touch targets are generous */
+  touch-action: manipulation;
 }
 .rev-bar:hover { background: var(--line-strong); }
+/* expanded, invisible hit area — keeps the line thin but tappable */
+.rev-bar::before {
+  content: '';
+  position: absolute;
+  left: 0; right: 0;
+  top: 50%;
+  height: 44px;
+  transform: translateY(-50%);
+}
 .rev-bar-fill {
   display: block; position: absolute; inset: 0;
   background: var(--emerald);
   transform: scaleX(0);
   transform-origin: left center;
+  border-radius: inherit;
 }
 /* without motion, mark the active one statically */
 .rev-bar.is-on { background: var(--emerald); }
@@ -195,20 +208,110 @@
 /* ============================================================
    RESPONSIVE
    ============================================================ */
-@media (max-width: 820px) {
-  .rev { grid-template-columns: 1fr; gap: clamp(1.8rem, 5vw, 2.6rem); }
-  .rev-plate-col { max-width: 16rem; margin-inline: auto; }
+
+/* ---- TABLET (<=900px) — stack to a single centred column ---- */
+@media (max-width: 900px) {
+  .rev {
+    grid-template-columns: 1fr;
+    gap: clamp(2rem, 5vw, 3rem);
+    margin-top: clamp(2.6rem, 7vw, 4rem);
+  }
+  .rev-plate-col { max-width: 17rem; margin-inline: auto; min-width: 0; }
   .rev-body { text-align: center; }
   .rev-quote { margin-inline: auto; }
   .rev-cite { align-items: center; }
   .rev-bars { margin-inline: auto; }
+  .jrn-feature { max-width: 38rem; }
 }
 
-@media (max-width: 700px) {
-  .jrn-feature { max-width: 100%; }
-  .jrn-score-note { display: none; }
+/* ---- PHONE (<=640px) — full-width media, breathable air,
+        comfortable type, and a tasteful one-shot reveal ---- */
+@media (max-width: 640px) {
+  /* SCORE BAND — keep the note (don't drop content); let it wrap
+     under the rating onto its own readable line */
+  .jrn-score {
+    gap: 0.55rem 1rem;
+    margin-top: clamp(1.8rem, 6vw, 2.6rem);
+    padding-block: clamp(0.9rem, 3vw, 1.2rem);
+  }
+  .jrn-score-divider { display: none; }
+  .jrn-score-note {
+    flex-basis: 100%;
+    font-size: 0.7rem;
+    line-height: 1.5;
+    letter-spacing: 0.04em;
+  }
+
+  /* PULL-QUOTE — full width, slightly tighter tracking so the big
+     serif never crowds the gutters */
+  .jrn-feature {
+    max-width: 100%;
+    margin-top: clamp(2.4rem, 9vw, 3.4rem);
+  }
+  .jrn-pull { letter-spacing: -0.018em; line-height: 1.18; }
+  .jrn-feature-cite { gap: 0.85rem; letter-spacing: 0.22em; }
+  .jrn-cite-rule { width: 2.4rem; }
+
+  /* SHOWCASE — plate sits comfortably, quote stays readable */
+  .rev-plate-col { max-width: 14.5rem; }
+  .rev-quote {
+    font-size: clamp(1.45rem, 1.1rem + 3.2vw, 1.95rem);
+    line-height: 1.32;
+    max-width: 26ch;
+  }
+  .rev-mark { font-size: clamp(2.6rem, 12vw, 3.6rem); }
+  .rev-cite { gap: 0.55rem; margin-top: clamp(1.3rem, 5vw, 1.9rem); }
+  .rev-name { font-size: 0.76rem; letter-spacing: 0.16em; }
+  .rev-meta { font-size: 0.7rem; }
+
+  /* progress bars stretch the full content width and stay easy to hit */
+  .rev-bars { max-width: 100%; gap: 0.55rem; margin-top: clamp(1.8rem, 6vw, 2.4rem); }
+
+  /* MOBILE MOTION — a gentle staggered rise + settle for the
+     showcase pieces as the section scrolls into view. Transform +
+     opacity only (60fps). Tied to the JS `is-revealed` class so it
+     plays on scroll, not on load. The CSS crossfade runs on top. */
+  .rev .rev-plate-col,
+  .rev .rev-quotes,
+  .rev .rev-bars {
+    opacity: 0;
+    transform: translateY(26px);
+    transition:
+      opacity 1s var(--ease-silk),
+      transform 1.05s var(--ease-silk);
+  }
+  .rev.is-revealed .rev-plate-col { transition-delay: 0.05s; }
+  .rev.is-revealed .rev-quotes    { transition-delay: 0.16s; }
+  .rev.is-revealed .rev-bars      { transition-delay: 0.28s; }
+  .rev.is-revealed .rev-plate-col,
+  .rev.is-revealed .rev-quotes,
+  .rev.is-revealed .rev-bars {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-@media (max-width: 620px) {
-  .jrn-feature { max-width: 100%; }
+/* ---- SMALL PHONE (<=400px) — protect the layout from overflow ---- */
+@media (max-width: 400px) {
+  .jrn-score-num { font-size: 1rem; }
+  .jrn-score-note { font-size: 0.68rem; }
+  .rev-plate-col { max-width: 13rem; }
+  .rev-plate-mono { font-size: clamp(2.8rem, 16vw, 4.2rem); }
+  .rev-quote { font-size: clamp(1.35rem, 1.05rem + 3vw, 1.7rem); max-width: 100%; }
+  .rev-name { letter-spacing: 0.12em; word-spacing: -0.02em; }
+}
+
+/* ---- never let the showcase pieces drive horizontal overflow ---- */
+.rev, .rev-body, .rev-plate-col, .rev-quotes, .rev-bars { min-width: 0; }
+.rev-quote, .jrn-pull, .rev-name, .rev-meta { overflow-wrap: break-word; }
+
+/* ---- respect the global reduced-motion kill switch ---- */
+@media (prefers-reduced-motion: reduce) {
+  .rev .rev-plate-col,
+  .rev .rev-quotes,
+  .rev .rev-bars {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
 }

@@ -120,6 +120,9 @@
   font-size: var(--fs-body);
   line-height: 1.55;
 }
+/* Brass underline beneath the title — mobile/tablet only (revealed below).
+   Hidden on the desktop pinned track, which already carries its own rail. */
+.atl-stage-rule { display: none; }
 /* Caption mark: echoes the spine's index device — small tracked caps
    with a brass series slash, tabular figures. Quiet, but house-cohesive. */
 .atl-stage-mark {
@@ -204,12 +207,24 @@
     height: auto;
     display: block;
   }
-  .atl-panel-copy {
-    opacity: 1 !important;        /* JS reveal is off at this width */
-    transform: none !important;
-  }
+  /* Copy + media reveal is now driven by GSAP (matchMedia, <=900px).
+     We deliberately leave the resting state fully visible in CSS so a
+     no-JS load still shows everything; GSAP sets its own "from" inline. */
   .atl-num { font-size: clamp(4rem, 2.5rem + 7vw, 7rem); }
   .atl-panel-media .ph { width: 100%; height: auto; }
+
+  /* The brass underline only exists on the stacked mobile/tablet layout
+     (desktop already has the spine progress rail). It draws in via GSAP. */
+  .atl-stage-rule {
+    display: block;
+    width: clamp(3.4rem, 12vw, 5rem);
+    height: 1.5px;
+    margin-top: clamp(0.85rem, 2.4vw, 1.25rem);
+    background: var(--brass);
+    opacity: 0.9;
+    transform-origin: left center;
+    transform: scaleX(1);   /* resting state for no-JS / reduced-motion */
+  }
 
   .atl-progress { display: none; }
 }
@@ -226,20 +241,46 @@
 @media (max-width: 640px) {
   .atl-panel-inner {
     grid-template-columns: 1fr;
-    gap: clamp(1.8rem, 5.5vw, 2.6rem);
+    gap: clamp(1.6rem, 5vw, 2.4rem);
   }
+  /* every grid/flex child must be allowed to shrink — no horizontal bleed */
+  .atl-panel-inner > * { min-width: 0; max-width: 100%; }
+
+  /* Media: order media BELOW the copy so the eye reads numeral → title →
+     rule → body → image, then leads into the next stage. Near-full-width,
+     centred, premium. */
   .atl-panel-media {
-    max-width: 78%;
+    order: 0;
+    max-width: 100%;
+    width: 100%;
   }
-  .atl-stage-body { max-width: 42ch; }
+  .atl-panel-media .ph {
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+    border-radius: var(--radius);
+    overflow: hidden;   /* keep the reveal scale/clip inside the rounded frame */
+  }
+
+  .atl-panel-copy { max-width: 100%; }
+  .atl-stage-body { max-width: 38ch; }
+
   /* At phone scale the numeral remains dominant but caps gracefully */
   .atl-num {
     font-size: clamp(4.4rem, 2.5rem + 7vw, 7rem);
   }
+  /* a touch tighter so big serif headings never crowd the gutter */
+  .atl-stage-title { letter-spacing: -0.015em; }
+
+  /* generous, breathable rhythm between stacked stages on phone */
+  .atl-track { gap: clamp(3.2rem, 11vw, 4.6rem); }
 }
 
-@media (max-width: 390px) {
-  .atl-panel-media { max-width: 100%; }
+@media (max-width: 400px) {
+  .atl-panel-inner { gap: clamp(1.4rem, 5vw, 2rem); }
+  .atl-stage-title { letter-spacing: -0.02em; }
+  .atl-stage-body { max-width: 34ch; }
+  .atl-track { gap: clamp(2.8rem, 10vw, 3.8rem); }
 }
 
 /* Reduced motion: ensure a static, readable stack regardless of width
@@ -267,5 +308,16 @@
   .atl-panel-media { height: auto; }
   .atl-panel-media .ph { width: 100%; height: auto; max-width: 70%; }
   .atl-panel-copy { opacity: 1 !important; transform: none !important; }
+  .atl-panel-media { opacity: 1 !important; transform: none !important; }
+  /* the brass underline rests fully drawn (no motion) when reduced */
+  .atl-stage-rule {
+    display: block;
+    width: clamp(3.4rem, 12vw, 5rem);
+    height: 1.5px;
+    margin-top: clamp(0.85rem, 2.4vw, 1.25rem);
+    background: var(--brass);
+    opacity: 0.9;
+    transform: none !important;
+  }
   .atl-progress { display: none; }
 }

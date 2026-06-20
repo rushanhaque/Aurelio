@@ -96,3 +96,203 @@
   background-size: cover;
   background-position: 50% 50%;
 }
+
+/* ============================================================
+   MOBILE / TOUCH STAGE LIST
+   Rendered by <MobileStages> below 900px. Each station is a
+   tappable row that shows its image + name by default and
+   reveals on scroll with a staggered fade-up + image zoom-in.
+   Colours come from CSS vars set inline, so the brand palette
+   (white ground + emerald) flows through untouched.
+   ============================================================ */
+.stage-list {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.stage-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  column-gap: clamp(0.85rem, 3.5vw, 1.4rem);
+  min-height: 4.75rem;          /* comfortable >=44px touch target */
+  padding: clamp(0.85rem, 3.2vw, 1.25rem) var(--gutter, 1.3rem);
+  text-decoration: none;
+  color: inherit;
+  border-top: 1px solid var(--stage-line, rgba(14, 59, 44, 0.16));
+  min-width: 0;
+  -webkit-tap-highlight-color: transparent;
+
+  /* scroll-reveal start state */
+  opacity: 0;
+  transform: translate3d(0, 26px, 0);
+  transition:
+    opacity var(--t-slow, 0.85s) var(--ease-silk, cubic-bezier(0.16, 1, 0.3, 1)),
+    transform var(--t-slow, 0.85s) var(--ease-silk, cubic-bezier(0.16, 1, 0.3, 1)),
+    background-color var(--t, 0.55s) var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1));
+  transition-delay: calc(var(--stage-i, 0) * 90ms);
+}
+
+.stage-row:first-child {
+  border-top: none;
+}
+
+.stage-row.is-in {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+/* station index — fine, quiet, sans caps */
+.stage-num {
+  font-family: var(--sans, sans-serif);
+  font-size: var(--fs-small, 0.79rem);
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  color: var(--ink-faint, rgba(14, 59, 44, 0.4));
+  font-variant-numeric: tabular-nums;
+}
+
+/* process image — rounded chip, gently zooms in on reveal */
+.stage-media {
+  display: block;
+  width: clamp(3.4rem, 16vw, 4.6rem);
+  height: clamp(3.4rem, 16vw, 4.6rem);
+  border-radius: var(--radius-sm, 10px);
+  overflow: hidden;
+  flex-shrink: 0;
+  background: var(--stage-line, rgba(14, 59, 44, 0.08));
+}
+
+.stage-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: 50% 50%;
+  transform: scale(1.18);
+  transform-origin: 50% 50%;
+  opacity: 0;
+  transition:
+    transform 1.2s var(--ease-silk, cubic-bezier(0.16, 1, 0.3, 1)),
+    opacity var(--t-slow, 0.85s) var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1));
+  transition-delay: calc(var(--stage-i, 0) * 90ms + 80ms);
+}
+
+.stage-row.is-in .stage-img {
+  transform: scale(1);
+  opacity: 1;
+}
+
+/* label + animated underline */
+.stage-label {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+  overflow: hidden;
+  padding-bottom: 0.35rem;
+}
+
+.stage-text {
+  font-family: var(--serif, serif);
+  font-weight: 400;
+  font-size: clamp(1.5rem, 7.5vw, 2.2rem);
+  line-height: 1.02;
+  letter-spacing: -0.01em;
+  text-transform: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.stage-underline {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 1px;
+  width: 100%;
+  background: var(--stage-accent, #0E3B2C);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--t-slow, 0.85s) var(--ease-silk, cubic-bezier(0.16, 1, 0.3, 1));
+  transition-delay: calc(var(--stage-i, 0) * 90ms + 220ms);
+}
+
+.stage-row.is-in .stage-underline {
+  transform: scaleX(1);
+}
+
+/* arrow affordance — slides in on tap/active */
+.stage-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  color: var(--stage-accent, #0E3B2C);
+  opacity: 0.55;
+  transform: translate3d(-4px, 0, 0);
+  transition:
+    opacity var(--t, 0.55s) var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1)),
+    transform var(--t, 0.55s) var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1));
+}
+
+.stage-row.is-in .stage-arrow {
+  opacity: 0.8;
+  transform: translate3d(0, 0, 0);
+}
+
+/* tap / active feedback (touch-equivalent of the desktop hover sweep) */
+.stage-row:active {
+  background-color: var(--stage-accent, #0E3B2C);
+  color: #FFFFFF;
+}
+
+.stage-row:active .stage-num,
+.stage-row:active .stage-arrow {
+  color: #FFFFFF;
+  opacity: 1;
+}
+
+.stage-row:active .stage-arrow {
+  transform: translate3d(4px, 0, 0);
+}
+
+.stage-row:active .stage-img {
+  transform: scale(1.06);
+}
+
+/* small phone — tighten the chip + type so nothing crowds */
+@media (max-width: 400px) {
+  .stage-row {
+    column-gap: 0.8rem;
+    min-height: 4.25rem;
+  }
+  .stage-text {
+    font-size: clamp(1.35rem, 8.5vw, 1.9rem);
+  }
+  .stage-arrow {
+    width: 1.6rem;
+  }
+}
+
+/* respect the global reduced-motion kill-switch: no offsets, no scale */
+@media (prefers-reduced-motion: reduce) {
+  .stage-row,
+  .stage-img,
+  .stage-underline,
+  .stage-arrow {
+    opacity: 1;
+    transform: none;
+  }
+  .stage-underline {
+    transform: scaleX(1);
+  }
+}

@@ -47,6 +47,11 @@
   box-shadow: var(--shadow-lift);
   border-color: rgba(14, 59, 44, 0.30);
 }
+/* mobile self-lighting state mirrors the desktop hover payoff */
+.gal-item.is-lit .gal-fig {
+  box-shadow: var(--shadow-lift);
+  border-color: rgba(14, 59, 44, 0.30);
+}
 
 /* ---- rest → hover crossfade: the piece comes alive (a lamp lights) ---- */
 .gal-img {
@@ -62,7 +67,12 @@
   object-fit: cover;
   opacity: 1;
   z-index: 0;
+  transform: scale(1.04);
+  transition: transform 1.4s var(--ease-silk);
 }
+/* the lit frame eases back to rest as it's revealed — a slow breath of life */
+.gal-item:hover .gal-img--on,
+.gal-item.is-lit .gal-img--on { transform: scale(1); }
 /* cover image sits on top; fades away on hover to reveal what's beneath */
 .gal-img--off {
   display: block;
@@ -74,6 +84,7 @@
   transition: opacity 1.1s ease 0.12s;
 }
 .gal-item:hover .gal-img--off { opacity: 0; }
+.gal-item.is-lit .gal-img--off { opacity: 0; }
 
 /* ---- brass foot sweep on hover ---- */
 .gal-fig::after {
@@ -90,6 +101,7 @@
   z-index: 2;
 }
 .gal-item:hover .gal-fig::after { transform: scaleX(1); }
+.gal-item.is-lit .gal-fig::after { transform: scaleX(1); }
 
 /* ---- caption ---- */
 .gal-cap {
@@ -110,23 +122,75 @@
 .gal-item:hover .gal-cap-name {
   color: var(--brass);
 }
+.gal-item.is-lit .gal-cap-name {
+  color: var(--brass);
+}
 .gal-cap-meta { font-variant-numeric: tabular-nums; }
 
 /* ============================================================
    RESPONSIVE
    ============================================================ */
+
+/* nothing may bleed past the viewport edge */
+.gal-grid,
+.gal-item,
+.gal-fig,
+.gal-img { max-width: 100%; }
+
+/* tablet — two columns, a touch more breathing room between pieces */
 @media (max-width: 900px) {
-  .gal-grid { columns: 2; }
+  .gal-grid {
+    columns: 2;
+    column-gap: clamp(0.8rem, 2.4vw, 1.1rem);
+  }
+  .gal-item { margin-bottom: clamp(0.9rem, 2.6vw, 1.2rem); }
 }
 
-@media (max-width: 560px) {
-  .gal-grid { columns: 1; }
-  .gal-cap-name { font-size: clamp(1.35rem, 6vw, 1.7rem); }
+/* phone — single editorial column, full-width media, generous calm spacing */
+@media (max-width: 640px) {
+  .gal-grid {
+    columns: 1;
+    column-gap: 0;
+  }
+  .gal-item {
+    margin-bottom: clamp(2.4rem, 9vw, 3.4rem);
+    /* GSAP drives the entrance on phone; keep it hidden until it fires so
+       there's no flash of un-revealed content */
+    will-change: transform, opacity;
+  }
+  .gal-item:last-child { margin-bottom: 0; }
+
+  /* the framed figure gets a touch more presence on its own line */
+  .gal-fig { border-radius: var(--radius); }
+
+  .gal-cap {
+    margin-top: clamp(0.85rem, 3.5vw, 1.1rem);
+    gap: 0.35rem;
+    padding-right: 0;
+  }
+  .gal-cap-name {
+    font-size: clamp(1.4rem, 6.4vw, 1.85rem);
+    letter-spacing: -0.005em;
+  }
+
+  /* on phone the action button hangs full-width and centred, not floated */
+  .gal-head-action {
+    justify-content: flex-start;
+    white-space: normal;
+  }
 }
 
+/* small phone — keep headings tight, never cramped */
+@media (max-width: 400px) {
+  .gal-item { margin-bottom: clamp(2rem, 8vw, 2.6rem); }
+  .gal-cap-name { font-size: clamp(1.3rem, 7.4vw, 1.55rem); }
+}
+
+/* honour the global kill-switch — no transforms, instant state, no flashing */
 @media (prefers-reduced-motion: reduce) {
-  .gal-img { transition: opacity 0.4s ease !important; }
-  .gal-item:hover .gal-img { transform: none !important; }
+  .gal-img--off { transition: opacity 0.4s ease !important; }
+  .gal-img--on { transform: none !important; transition: none !important; }
   .gal-fig::after { transition: none !important; }
-  .gal-item:hover .gal-cap-name { transform: none !important; }
+  .gal-cap-name { transition: color 0.3s ease !important; }
+  .gal-item { opacity: 1 !important; transform: none !important; }
 }

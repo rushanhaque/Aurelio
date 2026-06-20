@@ -2,11 +2,42 @@
    <FlowingMenu> — React Bits flowing marquee menu (gsap).
    On hover, a marquee overlay rises from the nearest edge,
    scrolling the item's name + image chips on a loop.
+
+   MOBILE: phones have no hover, so the marquee never fires and
+   users would see a flat list with no imagery. Below the tablet
+   breakpoint we swap in a stacked "stage" layout — each station
+   becomes a tappable row that shows its name + process image by
+   default, scroll-revealed with a staggered fade/slide + a gentle
+   image zoom-in. Same content, same delight, no jank.
    ============================================================ */
 import { useRef, useEffect, useState } from 'react'
 import { gsap } from 'gsap'
 
 import './FlowingMenu.css'
+
+/* Lightweight matchMedia hook — keeps the heavy GSAP marquee from
+   ever mounting on phones (where it can't be triggered anyway). */
+function useMediaQuery(query) {
+  const [matches, setMatches] = useState(() => {
+    if (typeof window === 'undefined' || !window.matchMedia) return false
+    return window.matchMedia(query).matches
+  })
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || !window.matchMedia) return
+    const mql = window.matchMedia(query)
+    const onChange = (e) => setMatches(e.matches)
+    onChange(mql)
+    if (mql.addEventListener) mql.addEventListener('change', onChange)
+    else mql.addListener(onChange)
+    return () => {
+      if (mql.removeEventListener) mql.removeEventListener('change', onChange)
+      else mql.removeListener(onChange)
+    }
+  }, [query])
+
+  return matches
+}
 
 function FlowingMenu({
   items = [],
@@ -17,6 +48,21 @@ function FlowingMenu({
   marqueeTextColor = '#120F17',
   borderColor = '#fff',
 }) {
+  // Below the tablet breakpoint, render the touch-friendly stage list.
+  const isCompact = useMediaQuery('(max-width: 900px)')
+
+  if (isCompact) {
+    return (
+      <MobileStages
+        items={items}
+        textColor={textColor}
+        bgColor={bgColor}
+        accentColor={marqueeBgColor}
+        borderColor={borderColor}
+      />
+    )
+  }
+
   return (
     <div className="menu-wrap" style={{ backgroundColor: bgColor }}>
       <nav className="menu">
@@ -32,6 +78,92 @@ function FlowingMenu({
           />
         ))}
       </nav>
+    </div>
+  )
+}
+
+/* ------------------------------------------------------------------
+   Mobile / touch layout: a clean vertical list of stations. Each row
+   shows the process image + name by default and reveals on scroll
+   with a staggered fade-up; the image gently zooms in as it lands.
+   A sliding hairline underline animates on tap/active for feedback.
+------------------------------------------------------------------ */
+function MobileStages({ items, textColor, bgColor, accentColor, borderColor }) {
+  const listRef = useRef(null)
+
+  useEffect(() => {
+    const root = listRef.current
+    if (!root) return
+
+    const rows = Array.from(root.querySelectorAll('.stage-row'))
+    if (!rows.length) return
+
+    // Honour the global reduced-motion preference: show everything.
+    const prefersReduced =
+      typeof window !== 'undefined' &&
+      window.matchMedia &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+    if (prefersReduced || !('IntersectionObserver' in window)) {
+      rows.forEach((row) => row.classList.add('is-in'))
+      return
+    }
+
+    const io = new IntersectionObserver(
+      (entries, obs) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-in')
+            obs.unobserve(entry.target)
+          }
+        })
+      },
+      { threshold: 0.25, rootMargin: '0px 0px -8% 0px' }
+    )
+
+    rows.forEach((row) => io.observe(row))
+    return () => io.disconnect()
+  }, [items])
+
+  return (
+    <div
+      className="stage-list"
+      ref={listRef}
+      style={{ backgroundColor: bgColor, '--stage-accent': accentColor, '--stage-line': borderColor }}
+    >
+      {items.map((item, idx) => (
+        <a
+          key={idx}
+          className="stage-row"
+          href={item.link}
+          style={{ '--stage-i': idx, color: textColor }}
+        >
+          <span className="stage-num" aria-hidden="true">
+            {String(idx + 1).padStart(2, '0')}
+          </span>
+          <span className="stage-media">
+            <span
+              className="stage-img"
+              style={{ backgroundImage: `url(${item.image})` }}
+            />
+          </span>
+          <span className="stage-label">
+            <span className="stage-text">{item.text}</span>
+            <span className="stage-underline" aria-hidden="true" />
+          </span>
+          <span className="stage-arrow" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none">
+              <path
+                d="M5 12h13M13 6l6 6-6 6"
+                stroke="currentColor"
+                strokeWidth="1.4"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </span>
+        </a>
+      ))}
     </div>
   )
 }

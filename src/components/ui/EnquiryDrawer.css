@@ -154,6 +154,10 @@
 .drawer-send--wa:hover { border-color: var(--emerald); transform: translateY(-1px); }
 .drawer-clear {
   align-self: flex-start;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 0.1rem;
   font-size: 0.68rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -162,3 +166,104 @@
   transition: color 0.35s;
 }
 .drawer-clear:hover { color: var(--emerald); }
+
+/* ============================================================
+   MOBILE — near full-width sheet, comfortable rows, big tap
+   targets, staggered item reveals, safe-area aware. Only small
+   screens are affected; desktop (>900px) is untouched.
+   ============================================================ */
+
+/* Tablet — slightly wider panel, a touch more breathing room. */
+@media (max-width: 900px) {
+  .drawer { width: min(440px, 94vw); }
+}
+
+/* Phone — the drawer becomes a near full-width sheet. */
+@media (max-width: 640px) {
+  .drawer {
+    width: min(100%, 30rem);
+    box-shadow: -18px 0 50px rgba(7, 37, 27, 0.22);
+    /* Honour the right notch / rounded-corner safe area. */
+    padding-right: env(safe-area-inset-right, 0px);
+  }
+
+  .drawer-head {
+    padding: 1.25rem var(--gutter);
+    /* Lift the header clear of the status bar / notch. */
+    padding-top: calc(1.25rem + env(safe-area-inset-top, 0px));
+  }
+  .drawer-title { font-size: 1.18rem; }
+
+  /* Bigger, friendlier close target. */
+  .drawer-close { width: 44px; height: 44px; }
+
+  .drawer-empty {
+    padding: 2rem var(--gutter);
+    /* Keep the empty state off the home-bar. */
+    padding-bottom: calc(2rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  .drawer-list {
+    padding: 1rem var(--gutter);
+    gap: 0.65rem;
+  }
+
+  /* Comfortable rows with a roomier thumb. */
+  .drawer-item {
+    grid-template-columns: 72px 1fr auto;
+    gap: 0.9rem;
+    padding: 0.7rem;
+    border-radius: 12px;
+  }
+  .drawer-thumb { width: 72px; height: 72px; }
+  .drawer-item-name { font-size: 1rem; }
+  .drawer-item-meta { font-size: 0.74rem; }
+
+  /* Easy-to-hit remove control. */
+  .drawer-remove { width: 40px; height: 40px; }
+
+  .drawer-foot {
+    padding: 1.1rem var(--gutter);
+    /* Clear the iOS home indicator. */
+    padding-bottom: calc(1.1rem + env(safe-area-inset-bottom, 0px));
+    gap: 0.9rem;
+  }
+
+  /* Generous, thumb-sized send buttons. */
+  .drawer-send {
+    padding: 1.1rem 1rem;
+    font-size: 0.74rem;
+    border-radius: 44px;
+  }
+  /* On touch, lean on :active rather than hover for feedback. */
+  .drawer-send:active { transform: translateY(1px); }
+
+  /* Staggered slide-up reveal of the saved pieces once the
+     sheet has finished sliding in. transform + opacity only. */
+  .drawer.is-open .drawer-item {
+    animation: drawer-item-in 0.6s var(--ease-out) both;
+  }
+  .drawer.is-open .drawer-item:nth-child(1) { animation-delay: 0.16s; }
+  .drawer.is-open .drawer-item:nth-child(2) { animation-delay: 0.22s; }
+  .drawer.is-open .drawer-item:nth-child(3) { animation-delay: 0.28s; }
+  .drawer.is-open .drawer-item:nth-child(4) { animation-delay: 0.34s; }
+  .drawer.is-open .drawer-item:nth-child(5) { animation-delay: 0.40s; }
+  .drawer.is-open .drawer-item:nth-child(n + 6) { animation-delay: 0.46s; }
+}
+
+@keyframes drawer-item-in {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Small phone — stack the two send buttons full-width. */
+@media (max-width: 400px) {
+  .drawer-actions { grid-template-columns: 1fr; }
+  .drawer-item { grid-template-columns: 60px 1fr auto; gap: 0.75rem; }
+  .drawer-thumb { width: 60px; height: 60px; }
+}
+
+/* Respect the global reduced-motion preference. */
+@media (prefers-reduced-motion: reduce) {
+  .drawer.is-open .drawer-item { animation: none; }
+}
