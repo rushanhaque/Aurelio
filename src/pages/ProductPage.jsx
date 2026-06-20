@@ -50,6 +50,7 @@ export default function ProductPage({ params }) {
             <div className="pd-media" ref={mediaRef} onMouseMove={onZoom}>
               <Placeholder
                 fill
+                priority
                 type="image"
                 index={product.index}
                 label={`${product.name} — ${product.suffix}`}

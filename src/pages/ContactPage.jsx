@@ -25,7 +25,7 @@ const LOCATIONS = [
     ],
     hours: 'Monday–Saturday · By appointment',
     tel: '+91 78179 76738',
-    email: 'mohdsaudsaud595@gmail.com',
+    email: 'info@aurelio.in',
   },
   {
     kind: 'Commissions & Export',
@@ -37,7 +37,7 @@ const LOCATIONS = [
     ],
     hours: 'Replies within two working days',
     tel: '+91 78179 76738',
-    email: 'mohdsaudsaud595@gmail.com',
+    email: 'saud@aurelio.in',
   },
 ]
 
@@ -164,7 +164,7 @@ export default function ContactPage() {
                   {error && <p className="cf-error">{error}</p>}
                   <div className="cf-actions">
                     <Button type="submit" variant="solid" arrow disabled={sending}>{sending ? 'Sending…' : 'Send message'}</Button>
-                    <a className="cf-or" href="mailto:mohdsaudsaud595@gmail.com">or email us directly</a>
+                    <a className="cf-or" href="mailto:info@aurelio.in">or email us directly</a>
                   </div>
                 </form>
               )}

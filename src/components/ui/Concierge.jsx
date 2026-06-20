@@ -8,7 +8,7 @@ import { useRef } from 'react'
 import { gsap, useGSAP, ScrollTrigger } from '../../lib/gsap'
 import { useLocation } from '../../lib/router'
 import './Concierge.css'
-const PHONE = '917817976738' // AF International — WhatsApp
+const PHONE = '917900613730' // AF International — WhatsApp
 const MESSAGE = encodeURIComponent("Hello Aurelio — I'd like to enquire about a piece.")
 
 export default function Concierge() {

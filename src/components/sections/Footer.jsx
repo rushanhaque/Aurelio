@@ -25,7 +25,7 @@ const COLUMNS = [
     heading: 'Connect',
     links: [
       { label: 'WhatsApp', href: 'https://wa.me/917817976738' },
-      { label: 'Email', href: 'mailto:mohdsaudsaud595@gmail.com' },
+      { label: 'Email', href: 'mailto:info@aurelio.in' },
       { label: 'Instagram', href: 'https://instagram.com/afinternational.in' },
     ],
   },
@@ -64,7 +64,7 @@ function CatalogueModal({ onClose }) {
     if (!form.email.trim() || !form.type) return
     const subject = encodeURIComponent(`Catalogue Request — ${form.type}`)
     const body = encodeURIComponent(`Hello,\n\nI would like to request the ${form.type} catalogue.\n\nEmail: ${form.email}\n\nThank you.`)
-    window.location.href = `mailto:mohdsaudsaud595@gmail.com?subject=${subject}&body=${body}`
+    window.location.href = `mailto:saud@aurelio.in?subject=${subject}&body=${body}`
     setSent(true)
   }
 
@@ -110,7 +110,7 @@ function CatalogueModal({ onClose }) {
 
 const VISIT = [
   { city: 'Moradabad Atelier', address: 'Katghar Pachpera, Moradabad 244001, Uttar Pradesh, India' },
-  { city: 'Enquiries', address: 'mohdsaudsaud595@gmail.com · +91 78179 76738' },
+  { city: 'Enquiries', address: 'saud@aurelio.in · +91 78179 76738' },
 ]
 
 function FooterLink({ link, onCatalogue }) {
@@ -203,10 +203,13 @@ export default function Footer() {
     <footer ref={ref} id="site-footer" className="ft">
       <div className="sec-grain" aria-hidden="true" />
       <div className="container ft-container">
+        {/* live atelier status — a quiet line that opens the footer */}
+        <div className="ft-status"><AtelierClock /></div>
+
         <Reveal as="div" className="ft-main">
           <nav className="ft-cols" aria-label="Footer">
             {COLUMNS.map((col) => (
-              <div className="ft-col" key={col.heading}>
+              <div className={`ft-col ft-col--${col.heading.toLowerCase()}`} key={col.heading}>
                 <h2 className="ft-col-head">{col.heading}</h2>
                 <ul className="ft-list">
                   {col.links.map((l) => (
@@ -264,7 +267,6 @@ export default function Footer() {
         </nav>
 
         <div className="ft-bottom">
-          <p className="ft-copy">© 2026 Aurelio · AF International — Handcrafted since 2008</p>
           <a
             className="ft-dev"
             href="https://rushanhaque.online"
@@ -273,7 +275,6 @@ export default function Footer() {
           >
             Contact developer
           </a>
-          <AtelierClock />
         </div>
       </div>
     </footer>

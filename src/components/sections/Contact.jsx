@@ -14,7 +14,7 @@ import './Contact.css'
 
 const STUDIO = [
   { label: 'Atelier', value: 'Moradabad, India' },
-  { label: 'Correspondence', value: 'mohdsaudsaud595@gmail.com', href: 'mailto:mohdsaudsaud595@gmail.com' },
+  { label: 'Correspondence', value: 'info@aurelio.in', href: 'mailto:info@aurelio.in' },
   { label: 'WhatsApp', value: '+91 78179 76738', href: 'https://wa.me/917817976738' },
 ]
 

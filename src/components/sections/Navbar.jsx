@@ -173,7 +173,7 @@ export default function Navbar() {
           <div className="navm-foot">
             <span className="navm-foot-item">Atelier — Moradabad, India</span>
             <span className="navm-foot-dot" aria-hidden="true">◆</span>
-            <a className="navm-foot-item navm-foot-link" href="mailto:mohdsaudsaud595@gmail.com">mohdsaudsaud595@gmail.com</a>
+            <a className="navm-foot-item navm-foot-link" href="mailto:info@aurelio.in">info@aurelio.in</a>
             <span className="navm-foot-dot" aria-hidden="true">◆</span>
             <a className="navm-foot-item navm-foot-link" href="https://wa.me/917817976738" target="_blank" rel="noreferrer">+91 78179 76738</a>
           </div>

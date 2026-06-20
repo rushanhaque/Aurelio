@@ -163,6 +163,10 @@
   /* the framed figure gets a touch more presence on its own line */
   .gal-fig { border-radius: var(--radius); }
 
+  /* the rest→lit crossfade is more delayed + slower on phone, so the piece
+     "lights" with a calmer, more deliberate beat as it settles into view */
+  .gal-img--off { transition: opacity 1.6s ease 0.9s; }
+
   .gal-cap {
     margin-top: clamp(0.85rem, 3.5vw, 1.1rem);
     gap: 0.35rem;

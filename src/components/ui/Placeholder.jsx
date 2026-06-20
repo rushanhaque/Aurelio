@@ -26,6 +26,7 @@ export default function Placeholder({
   className = '',
   drift = true,
   fill = false,
+  priority = false,
   src,
   alt = '',
   fit = 'cover',
@@ -100,7 +101,8 @@ export default function Placeholder({
           className={`ph-img${imgLoaded ? ' is-loaded' : ''}`}
           src={src}
           alt={alt}
-          loading="lazy"
+          loading={priority ? 'eager' : 'lazy'}
+          fetchpriority={priority ? 'high' : undefined}
           decoding="async"
           onLoad={() => setImgLoaded(true)}
           onError={() => setImgError(true)}
