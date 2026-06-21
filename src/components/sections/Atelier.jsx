@@ -114,7 +114,8 @@ export default function Atelier() {
 
       const mm = gsap.matchMedia()
 
-      mm.add('(max-width: 900px)', () => {
+      // Tablet stack (641–900px): each stage reveals on vertical scroll.
+      mm.add('(min-width: 641px) and (max-width: 900px)', () => {
         const panels = gsap.utils.toArray('.atl-panel', root)
 
         panels.forEach((panel) => {
@@ -166,6 +167,10 @@ export default function Atelier() {
           }
         })
       })
+
+      // Phone filmstrip (<=640px): the cards sit in a sideways scroller and are
+      // visible by default — the BlurText titles/numbers carry the motion and
+      // the swipe is the interaction, so there's no hide-and-reveal to strand.
 
       return () => mm.revert()
     },

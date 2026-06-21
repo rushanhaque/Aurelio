@@ -237,50 +237,76 @@
   }
 }
 
-/* phone: stack copy over media inside each panel */
+/* phone: a horizontal "filmstrip" of smaller stage cards you swipe sideways */
 @media (max-width: 640px) {
+  .atl-headwrap { padding-bottom: clamp(1.2rem, 4vw, 2rem); }
+  .atl-viewport { display: block; overflow: visible; }
+
+  /* the track becomes a snap-scrolling row instead of a vertical stack */
+  .atl-track {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: flex-start;
+    width: auto;
+    height: auto;
+    gap: clamp(0.9rem, 3.5vw, 1.3rem);
+    padding-inline: var(--gutter);
+    scroll-padding-left: var(--gutter);
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+  }
+  .atl-track::-webkit-scrollbar { display: none; }
+
+  /* smaller, self-contained cards; the next one peeks at the edge */
+  .atl-panel {
+    flex: 0 0 auto;
+    width: 74vw;
+    max-width: 300px;
+    height: auto;
+    display: block;
+    scroll-snap-align: start;
+  }
+
   .atl-panel-inner {
     grid-template-columns: 1fr;
-    gap: clamp(1.6rem, 5vw, 2.4rem);
+    gap: clamp(0.85rem, 3.5vw, 1.2rem);
   }
-  /* every grid/flex child must be allowed to shrink — no horizontal bleed */
   .atl-panel-inner > * { min-width: 0; max-width: 100%; }
 
-  /* Media: order media BELOW the copy so the eye reads numeral → title →
-     rule → body → image, then leads into the next stage. Near-full-width,
-     centred, premium. */
-  .atl-panel-media {
-    order: 0;
-    max-width: 100%;
-    width: 100%;
-  }
+  /* image sits on top of each card at a tidy, smaller ratio */
+  .atl-panel-media { order: -1; width: 100%; height: auto; }
   .atl-panel-media .ph {
     width: 100%;
     height: auto;
+    aspect-ratio: 4 / 5;
     max-width: 100%;
     border-radius: var(--radius);
-    overflow: hidden;   /* keep the reveal scale/clip inside the rounded frame */
+    overflow: hidden;
   }
 
   .atl-panel-copy { max-width: 100%; }
-  .atl-stage-body { max-width: 38ch; }
 
-  /* At phone scale the numeral remains dominant but caps gracefully */
-  .atl-num {
-    font-size: clamp(4.4rem, 2.5rem + 7vw, 7rem);
+  /* compact type for the smaller card */
+  .atl-num { font-size: clamp(2.1rem, 9vw, 2.9rem); line-height: 0.9; }
+  .atl-num-rule { width: 2.4rem; margin-top: 0.55rem; }
+  .atl-stage-title {
+    font-size: clamp(1.2rem, 5.2vw, 1.55rem);
+    margin-top: 0.6rem;
+    letter-spacing: -0.015em;
   }
-  /* a touch tighter so big serif headings never crowd the gutter */
-  .atl-stage-title { letter-spacing: -0.015em; }
-
-  /* generous, breathable rhythm between stacked stages on phone */
-  .atl-track { gap: clamp(3.2rem, 11vw, 4.6rem); }
+  .atl-stage-body { font-size: 0.84rem; line-height: 1.5; max-width: none; margin-top: 0.55rem; }
+  .atl-stage-rule { margin-top: 0.65rem; width: clamp(2.4rem, 10vw, 3.2rem); }
+  .atl-stage-mark { margin-top: 0.75rem; font-size: 0.6rem; }
 }
 
 @media (max-width: 400px) {
-  .atl-panel-inner { gap: clamp(1.4rem, 5vw, 2rem); }
+  .atl-panel { width: 80vw; }
+  .atl-track { gap: 0.8rem; }
   .atl-stage-title { letter-spacing: -0.02em; }
-  .atl-stage-body { max-width: 34ch; }
-  .atl-track { gap: clamp(2.8rem, 10vw, 3.8rem); }
 }
 
 /* Reduced motion: ensure a static, readable stack regardless of width
