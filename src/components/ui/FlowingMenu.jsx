@@ -48,17 +48,16 @@ function FlowingMenu({
   marqueeTextColor = '#120F17',
   borderColor = '#fff',
 }) {
-  // Below the tablet breakpoint, render the touch-friendly stage list.
+  // Below the tablet breakpoint, render the auto-playing marquee — the same
+  // emerald name+image sweep the desktop reveals on hover, but always on.
   const isCompact = useMediaQuery('(max-width: 900px)')
 
   if (isCompact) {
     return (
-      <MobileStages
+      <MobileMarquee
         items={items}
-        textColor={textColor}
-        bgColor={bgColor}
-        accentColor={marqueeBgColor}
-        borderColor={borderColor}
+        bgColor={marqueeBgColor}
+        textColor={marqueeTextColor}
       />
     )
   }
@@ -83,87 +82,25 @@ function FlowingMenu({
 }
 
 /* ------------------------------------------------------------------
-   Mobile / touch layout: a clean vertical list of stations. Each row
-   shows the process image + name by default and reveals on scroll
-   with a staggered fade-up; the image gently zooms in as it lands.
-   A sliding hairline underline animates on tap/active for feedback.
+   Mobile / touch layout: an always-on auto-scrolling marquee — the
+   phone equivalent of the desktop hover sweep. The six stations stream
+   past on the emerald band (name + rounded process-image chip), looping
+   seamlessly. Pure CSS animation, so it can never stall or get stuck;
+   the global reduced-motion switch parks it.
 ------------------------------------------------------------------ */
-function MobileStages({ items, textColor, bgColor, accentColor, borderColor }) {
-  const listRef = useRef(null)
-
-  useEffect(() => {
-    const root = listRef.current
-    if (!root) return
-
-    const rows = Array.from(root.querySelectorAll('.stage-row'))
-    if (!rows.length) return
-
-    // Honour the global reduced-motion preference: show everything.
-    const prefersReduced =
-      typeof window !== 'undefined' &&
-      window.matchMedia &&
-      window.matchMedia('(prefers-reduced-motion: reduce)').matches
-
-    if (prefersReduced || !('IntersectionObserver' in window)) {
-      rows.forEach((row) => row.classList.add('is-in'))
-      return
-    }
-
-    const io = new IntersectionObserver(
-      (entries, obs) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('is-in')
-            obs.unobserve(entry.target)
-          }
-        })
-      },
-      { threshold: 0.25, rootMargin: '0px 0px -8% 0px' }
-    )
-
-    rows.forEach((row) => io.observe(row))
-    return () => io.disconnect()
-  }, [items])
-
+function MobileMarquee({ items, bgColor, textColor }) {
+  // two identical sets → a -50% translate loops with no seam
+  const loop = [...items, ...items]
   return (
-    <div
-      className="stage-list"
-      ref={listRef}
-      style={{ backgroundColor: bgColor, '--stage-accent': accentColor, '--stage-line': borderColor }}
-    >
-      {items.map((item, idx) => (
-        <a
-          key={idx}
-          className="stage-row"
-          href={item.link}
-          style={{ '--stage-i': idx, color: textColor }}
-        >
-          <span className="stage-num" aria-hidden="true">
-            {String(idx + 1).padStart(2, '0')}
+    <div className="tm-mob" style={{ backgroundColor: bgColor, color: textColor }} aria-label="The path a piece travels">
+      <div className="tm-mob-track">
+        {loop.map((item, idx) => (
+          <span className="tm-mob-chip" key={idx} aria-hidden={idx >= items.length ? 'true' : undefined}>
+            <span className="tm-mob-text">{item.text}</span>
+            <span className="tm-mob-img" style={{ backgroundImage: `url(${item.image})` }} />
           </span>
-          <span className="stage-media">
-            <span
-              className="stage-img"
-              style={{ backgroundImage: `url(${item.image})` }}
-            />
-          </span>
-          <span className="stage-label">
-            <span className="stage-text">{item.text}</span>
-            <span className="stage-underline" aria-hidden="true" />
-          </span>
-          <span className="stage-arrow" aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="none">
-              <path
-                d="M5 12h13M13 6l6 6-6 6"
-                stroke="currentColor"
-                strokeWidth="1.4"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </span>
-        </a>
-      ))}
+        ))}
+      </div>
     </div>
   )
 }

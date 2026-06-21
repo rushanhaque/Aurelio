@@ -253,13 +253,16 @@
   .her-stat:nth-child(odd) { border-right: 1px solid var(--line-light); }
 }
 
-/* Phone — single column, stacked, full-bleed film */
+/* Phone — a shorter, landscape-fit band rather than a full-screen portrait.
+   We release the 100svh lock so the section hugs its content, keep the stats
+   in a compact 2×2, and trim the vertical air all round. */
 @media (max-width: 640px) {
   .her {
-    /* a touch more vertical air around the content, never cramped */
-    padding-block: var(--nav-clear) clamp(2.4rem, 7vw, 3.5rem);
+    min-height: auto;          /* no full-screen lock — short, banner-like */
     justify-content: center;
+    padding-block: calc(var(--nav-clear) + clamp(1rem, 4vw, 1.8rem)) clamp(1.5rem, 5vw, 2.2rem);
   }
+  .her-body { gap: clamp(1rem, 4vw, 1.5rem); }
 
   /* slightly stronger scrim + softer film so type stays crisp on small,
      bright phone screens (transform/opacity-safe; no layout animation) */
@@ -267,42 +270,44 @@
   .her-video { filter: blur(4px); transform: scale(1.06); }
 
   /* prose goes full width; cap line length for readability */
-  .her-prose { max-width: 100%; gap: clamp(0.7rem, 2.4vw, 1rem); }
-  .her-p { max-width: 100%; line-height: 1.6; }
+  .her-prose { max-width: 100%; gap: clamp(0.5rem, 2vw, 0.85rem); }
+  .her-p { max-width: 100%; line-height: 1.55; }
 
   /* tighten the big serif heading so it never overflows the gutter */
   .her .sh-title { letter-spacing: -0.015em; }
 
-  .her-rule { margin-top: clamp(1.8rem, 6vw, 2.6rem); }
+  .her-rule { margin-top: clamp(1.2rem, 4.5vw, 1.9rem); }
 
+  /* stats stay a compact 2×2 (keeps the section short + wide-feeling) */
   .her-stats {
-    grid-template-columns: 1fr;
-    row-gap: 0;
-    padding-block: clamp(1.6rem, 5vw, 2.4rem);
+    grid-template-columns: repeat(2, 1fr);
+    row-gap: clamp(1.2rem, 5vw, 1.8rem);
+    column-gap: clamp(0.9rem, 4vw, 1.5rem);
+    padding-block: clamp(1.1rem, 4vw, 1.7rem);
   }
   .her-stat {
-    display: flex;
-    flex-direction: column;
-    padding: clamp(1.5rem, 6vw, 2.2rem) 0;
+    padding: 0 clamp(0.8rem, 3.5vw, 1.4rem);
     min-width: 0;
   }
-  .her-stat:nth-child(odd) { border-right: 0; }
-  .her-stat + .her-stat    { border-top: 1px solid var(--line-light); }
-  .her-stat-line           { left: 0; }
+  .her-stat:nth-child(odd)  { border-right: 1px solid var(--line-light); padding-inline-start: 0; }
+  .her-stat:nth-child(even) { padding-inline-end: 0; }
+  .her-stat + .her-stat     { border-top: 0; }
+  .her-stat-line            { left: 0; }
+  .her-stat:nth-child(even) .her-stat-line { left: clamp(0.8rem, 3.5vw, 1.4rem); }
   .her-stat-num {
-    font-size: clamp(3.2rem, 14vw, 4.6rem);
-    padding-top: 0.35rem;
+    font-size: clamp(2.2rem, 11vw, 3.1rem);
+    padding-top: 0.25rem;
   }
-  .her-stat-label { font-size: 0.7rem; }
+  .her-stat-tag { padding-top: 0.4rem; }
+  .her-stat-label { font-size: 0.64rem; margin-top: 0.4rem; }
 
-  /* expand the drop-cap a hair so the opening paragraph reads as deliberate */
-  .her-drop { font-size: 2.8em; }
+  .her-drop { font-size: 2.6em; }
 }
 
 /* Small phone — final tightening so nothing bleeds past the edge */
 @media (max-width: 400px) {
-  .her-stat-num { font-size: clamp(2.9rem, 15vw, 3.6rem); }
-  .her-p { font-size: clamp(0.95rem, 0.9rem + 0.6vw, 1.05rem); }
+  .her-stat-num { font-size: clamp(2rem, 12vw, 2.7rem); }
+  .her-p { font-size: clamp(0.92rem, 0.88rem + 0.5vw, 1.02rem); }
   .her-stat-tag { letter-spacing: 0.18em; }
   .her-stat-label { letter-spacing: 0.1em; }
 }
