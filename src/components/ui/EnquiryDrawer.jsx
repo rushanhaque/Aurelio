@@ -10,7 +10,7 @@ import { getProduct } from '../../data/collections'
 import './EnquiryDrawer.css'
 
 const ENQUIRY_EMAIL = 'saud@aurelio.in'
-const ENQUIRY_PHONE = '917900613730'
+const ENQUIRY_PHONE = '917817976738'
 
 export default function EnquiryDrawer() {
   const { saved, remove, clear, open, setOpen } = useEnquiry()
