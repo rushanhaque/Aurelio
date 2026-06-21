@@ -107,10 +107,17 @@
 .tm-mob {
   width: 100%;
   overflow: hidden;
-  border-radius: var(--radius, 14px);
-  padding-block: clamp(1.1rem, 5vw, 1.9rem);
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
-  mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.5rem, 2.4vw, 0.9rem);
+  padding-block: clamp(0.9rem, 4vw, 1.5rem);
+}
+
+/* each row is its own clipped carousel */
+.tm-mob-row {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
 }
 
 .tm-mob-track {
@@ -118,8 +125,10 @@
   align-items: center;
   width: max-content;
   will-change: transform;
-  animation: tmMobScroll 18s linear infinite;
+  animation: tmMobScroll 20s linear infinite;
 }
+/* adjacent rows run in opposite directions */
+.tm-mob-row--right .tm-mob-track { animation-direction: reverse; }
 
 @keyframes tmMobScroll {
   from { transform: translateX(0); }
@@ -129,15 +138,15 @@
 .tm-mob-chip {
   display: inline-flex;
   align-items: center;
-  gap: clamp(0.85rem, 3.6vw, 1.3rem);
-  padding-inline: clamp(0.85rem, 3.6vw, 1.4rem);
+  gap: clamp(0.7rem, 3vw, 1.1rem);
+  padding-inline: clamp(0.7rem, 3vw, 1.2rem);
   flex: 0 0 auto;
 }
 
 .tm-mob-text {
   font-family: var(--sans, sans-serif);
   font-weight: 500;
-  font-size: clamp(1.15rem, 6vw, 1.8rem);
+  font-size: clamp(1rem, 5vw, 1.5rem);
   letter-spacing: 0.04em;
   text-transform: uppercase;
   white-space: nowrap;
@@ -145,8 +154,8 @@
 
 .tm-mob-img {
   display: block;
-  width: clamp(3.6rem, 17vw, 5.2rem);
-  height: clamp(2.5rem, 11vw, 3.4rem);
+  width: clamp(3rem, 14vw, 4.4rem);
+  height: clamp(2.1rem, 9vw, 2.9rem);
   border-radius: 999px;
   background-size: cover;
   background-position: 50% 50%;

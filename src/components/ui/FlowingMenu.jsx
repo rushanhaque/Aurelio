@@ -56,8 +56,8 @@ function FlowingMenu({
     return (
       <MobileMarquee
         items={items}
-        bgColor={marqueeBgColor}
-        textColor={marqueeTextColor}
+        bgColor={bgColor}
+        textColor={textColor}
       />
     )
   }
@@ -89,18 +89,31 @@ function FlowingMenu({
    the global reduced-motion switch parks it.
 ------------------------------------------------------------------ */
 function MobileMarquee({ items, bgColor, textColor }) {
-  // two identical sets → a -50% translate loops with no seam
-  const loop = [...items, ...items]
+  // rotate the start so each row shows different stations at any moment
+  const rotate = (arr, n) => [...arr.slice(n % arr.length), ...arr.slice(0, n % arr.length)]
+  // three separate carousels, adjacent rows running in opposite directions
+  const rows = [
+    { dir: 'left', items: rotate(items, 0) },
+    { dir: 'right', items: rotate(items, 2) },
+    { dir: 'left', items: rotate(items, 4) },
+  ]
   return (
     <div className="tm-mob" style={{ backgroundColor: bgColor, color: textColor }} aria-label="The path a piece travels">
-      <div className="tm-mob-track">
-        {loop.map((item, idx) => (
-          <span className="tm-mob-chip" key={idx} aria-hidden={idx >= items.length ? 'true' : undefined}>
-            <span className="tm-mob-text">{item.text}</span>
-            <span className="tm-mob-img" style={{ backgroundImage: `url(${item.image})` }} />
-          </span>
-        ))}
-      </div>
+      {rows.map((row, ri) => {
+        const loop = [...row.items, ...row.items]   // two identical sets → seamless -50% loop
+        return (
+          <div className={`tm-mob-row tm-mob-row--${row.dir}`} key={ri} aria-hidden={ri > 0 ? 'true' : undefined}>
+            <div className="tm-mob-track">
+              {loop.map((item, idx) => (
+                <span className="tm-mob-chip" key={idx}>
+                  <span className="tm-mob-text">{item.text}</span>
+                  <span className="tm-mob-img" style={{ backgroundImage: `url(${item.image})` }} />
+                </span>
+              ))}
+            </div>
+          </div>
+        )
+      })}
     </div>
   )
 }

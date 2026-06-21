@@ -267,8 +267,8 @@
   /* smaller, self-contained cards; the next one peeks at the edge */
   .atl-panel {
     flex: 0 0 auto;
-    width: 74vw;
-    max-width: 300px;
+    width: 63vw;
+    max-width: 255px;
     height: auto;
     display: block;
     scroll-snap-align: start;
@@ -293,21 +293,21 @@
 
   .atl-panel-copy { max-width: 100%; }
 
-  /* compact type for the smaller card */
-  .atl-num { font-size: clamp(2.1rem, 9vw, 2.9rem); line-height: 0.9; }
-  .atl-num-rule { width: 2.4rem; margin-top: 0.55rem; }
+  /* compact type for the smaller card (≈15% down from the prior phone size) */
+  .atl-num { font-size: clamp(1.8rem, 7.6vw, 2.45rem); line-height: 0.9; }
+  .atl-num-rule { width: 2rem; margin-top: 0.5rem; }
   .atl-stage-title {
-    font-size: clamp(1.2rem, 5.2vw, 1.55rem);
-    margin-top: 0.6rem;
+    font-size: clamp(1.02rem, 4.4vw, 1.32rem);
+    margin-top: 0.5rem;
     letter-spacing: -0.015em;
   }
-  .atl-stage-body { font-size: 0.84rem; line-height: 1.5; max-width: none; margin-top: 0.55rem; }
-  .atl-stage-rule { margin-top: 0.65rem; width: clamp(2.4rem, 10vw, 3.2rem); }
-  .atl-stage-mark { margin-top: 0.75rem; font-size: 0.6rem; }
+  .atl-stage-body { font-size: 0.78rem; line-height: 1.5; max-width: none; margin-top: 0.5rem; }
+  .atl-stage-rule { margin-top: 0.55rem; width: clamp(2rem, 8.5vw, 2.7rem); }
+  .atl-stage-mark { margin-top: 0.65rem; font-size: 0.58rem; }
 }
 
 @media (max-width: 400px) {
-  .atl-panel { width: 80vw; }
+  .atl-panel { width: 68vw; }
   .atl-track { gap: 0.8rem; }
   .atl-stage-title { letter-spacing: -0.02em; }
 }
